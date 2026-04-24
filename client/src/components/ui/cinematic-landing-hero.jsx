@@ -24,8 +24,8 @@ const INJECTED_STYLES = `
   .bg-grid-theme {
       background-size: 60px 60px;
       background-image: 
-          linear-gradient(to right, color-mix(in srgb, var(--color-foreground) 5%, transparent) 1px, transparent 1px),
-          linear-gradient(to bottom, color-mix(in srgb, var(--color-foreground) 5%, transparent) 1px, transparent 1px);
+          linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
       mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
       -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
   }
@@ -36,21 +36,21 @@ const INJECTED_STYLES = `
   
   /* OUTSIDE THE CARD: Theme-aware text (Shadow in Light Mode, Glow in Dark Mode) */
   .text-3d-matte {
-      color: var(--color-foreground);
+      color: #ffffff;
       text-shadow: 
-          0 10px 30px color-mix(in srgb, var(--color-foreground) 20%, transparent), 
-          0 2px 4px color-mix(in srgb, var(--color-foreground) 10%, transparent);
+          0 10px 30px rgba(255, 255, 255, 0.2), 
+          0 2px 4px rgba(255, 255, 255, 0.1);
   }
 
   .text-silver-matte {
-      background: linear-gradient(180deg, var(--color-foreground) 0%, color-mix(in srgb, var(--color-foreground) 40%, transparent) 100%);
+      background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.4) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       transform: translateZ(0); /* Hardware acceleration to prevent WebKit clipping bug */
       filter: 
-          drop-shadow(0px 10px 20px color-mix(in srgb, var(--color-foreground) 15%, transparent)) 
-          drop-shadow(0px 2px 4px color-mix(in srgb, var(--color-foreground) 10%, transparent));
+          drop-shadow(0px 10px 20px rgba(255, 255, 255, 0.15)) 
+          drop-shadow(0px 2px 4px rgba(255, 255, 255, 0.1));
   }
 
   /* INSIDE THE CARD: Hardcoded Silver/White for the dark background, deep rich shadows */
@@ -292,7 +292,7 @@ export function CinematicHero({
   return (
     <div
       ref={containerRef}
-      className={cn("relative w-screen h-screen overflow-hidden flex items-center justify-center bg-background text-foreground font-sans antialiased", className)}
+      className={cn("relative w-screen h-screen overflow-hidden flex items-center justify-center bg-zinc-950 text-white font-sans antialiased", className)}
       style={{ perspective: "1500px" }}
       {...props}
     >
