@@ -28,6 +28,7 @@
     "papaparse": "^5.5.3",
     "pdf-parse": "^1.1.1",
     "pg": "^8.20.0",
+    "plaid": "^42.1.0",
     "sharp": "^0.34.5",
     "socket.io": "^4.8.3",
     "tesseract.js": "^7.0.0"

@@ -50,12 +50,14 @@ const transactionRoutes = require('./routes/transactionRoutes');
 const invoiceRoutes = require('./routes/invoiceRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const plaidRoutes = require('./routes/plaidRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/invoices', invoiceRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/plaid', plaidRoutes);
 
 // Base route for health check
 app.get('/', (req, res) => {

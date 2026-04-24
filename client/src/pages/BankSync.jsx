@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Building2, Link2, RefreshCw, CheckCircle2, AlertCircle, ArrowRightLeft } from 'lucide-react';
 import api from '../services/api';
 import toast from 'react-hot-toast';
+import { usePlaidLink } from 'react-plaid-link';
 
 const BankSync = () => {
   const [isConnected, setIsConnected] = useState(false);
@@ -9,30 +10,53 @@ const BankSync = () => {
   const [isSyncing, setIsSyncing] = useState(false);
   const [bankTransactions, setBankTransactions] = useState([]);
 
-  // Mock connecting to Plaid/Open Banking
-  const handleConnectBank = () => {
+  const [linkToken, setLinkToken] = useState(null);
+
+  // 1. Fetch Link Token on Mount
+  useEffect(() => {
+    const fetchLinkToken = async () => {
+      try {
+        const res = await api.post('/plaid/create_link_token');
+        setLinkToken(res.data.link_token);
+      } catch (err) {
+        console.error('Error fetching link token:', err);
+        toast.error('Failed to initialize Plaid connection');
+      }
+    };
+    fetchLinkToken();
+  }, []);
+
+  // 2. Handle successful Plaid Link
+  const onSuccess = async (public_token, metadata) => {
     setIsLinking(true);
-    // Simulate OAuth/Plaid popup flow
-    setTimeout(() => {
-      setIsLinking(false);
+    try {
+      await api.post('/plaid/set_access_token', { public_token });
       setIsConnected(true);
-      toast.success('Successfully connected to HDFC Bank (Mock)');
+      toast.success(`Successfully connected to ${metadata.institution.name}`);
       fetchBankFeeds();
-    }, 2000);
+    } catch (error) {
+      toast.error('Failed to link bank account');
+    } finally {
+      setIsLinking(false);
+    }
   };
 
-  const fetchBankFeeds = () => {
+  const { open, ready } = usePlaidLink({
+    token: linkToken,
+    onSuccess,
+  });
+
+  const fetchBankFeeds = async () => {
     setIsSyncing(true);
-    // Simulate fetching from bank API
-    setTimeout(() => {
-      setBankTransactions([
-        { id: 'b1', date: new Date().toISOString().split('T')[0], description: 'NEFT-AWS Cloud Services', amount: -25000, status: 'pending' },
-        { id: 'b2', date: new Date(Date.now() - 86400000).toISOString().split('T')[0], description: 'IMPS-Client Payment (Acme)', amount: 150000, status: 'pending' },
-        { id: 'b3', date: new Date(Date.now() - 172800000).toISOString().split('T')[0], description: 'POS-Reliance Fresh', amount: -1250, status: 'pending' },
-      ]);
+    try {
+      const res = await api.get('/plaid/transactions');
+      setBankTransactions(res.data.transactions);
+      toast.success('Live bank feeds synced!');
+    } catch (error) {
+      toast.error('Failed to sync bank feeds from Plaid');
+    } finally {
       setIsSyncing(false);
-      toast.success('Bank feeds synced!');
-    }, 1500);
+    }
   };
 
   const handleReconcile = async (tx) => {
@@ -68,12 +92,12 @@ const BankSync = () => {
         <div>
           {!isConnected ? (
             <button 
-              onClick={handleConnectBank}
-              disabled={isLinking}
+              onClick={() => open()}
+              disabled={!ready || isLinking}
               className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm disabled:opacity-70"
             >
               {isLinking ? <RefreshCw size={18} className="animate-spin" /> : <Link2 size={18} />}
-              {isLinking ? 'Connecting...' : 'Connect Bank'}
+              {isLinking ? 'Connecting...' : 'Connect Live Bank'}
             </button>
           ) : (
             <button 
