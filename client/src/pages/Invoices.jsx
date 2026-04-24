@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { FileText, UploadCloud, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { FileText, UploadCloud, RefreshCw, CheckCircle2, Send } from 'lucide-react';
 import api from '../services/api';
 import toast from 'react-hot-toast';
+import OutgoingInvoiceGenerator from '../components/OutgoingInvoiceGenerator';
 
 const Invoices = () => {
+  const [activeTab, setActiveTab] = useState('outgoing');
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -23,8 +25,10 @@ const Invoices = () => {
   };
 
   useEffect(() => {
-    fetchInvoices();
-  }, []);
+    if (activeTab === 'incoming') {
+      fetchInvoices();
+    }
+  }, [activeTab]);
 
   const onDrop = useCallback(async (acceptedFiles) => {
     if (acceptedFiles.length === 0) return;
@@ -74,9 +78,6 @@ const Invoices = () => {
       
       await api.post('/transactions', payload);
       
-      // Update invoice as synced (Needs backend route, but we'll simulate for MVP or skip update if not existing)
-      // await api.put(`/invoices/${invoice.id}`, { syncedToTransaction: true });
-      
       toast.success('Successfully synced to expenses!');
     } catch (error) {
       toast.error('Failed to sync to expenses');
@@ -87,11 +88,31 @@ const Invoices = () => {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Invoice Intelligence</h1>
-        <p className="text-sm text-gray-500 mt-1">Upload invoices. Our AI will read them and sync to your expenses.</p>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Invoicing & Billing</h1>
+          <p className="text-sm text-gray-500 mt-1">Create professional invoices or auto-parse incoming vendor bills.</p>
+        </div>
+        <div className="flex bg-gray-100 p-1 rounded-xl">
+          <button 
+            onClick={() => setActiveTab('outgoing')}
+            className={`px-6 py-2 text-sm font-medium rounded-lg transition-colors ${activeTab === 'outgoing' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+          >
+            Create Invoice
+          </button>
+          <button 
+            onClick={() => setActiveTab('incoming')}
+            className={`px-6 py-2 text-sm font-medium rounded-lg transition-colors ${activeTab === 'incoming' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+          >
+            Vendor Bills (OCR)
+          </button>
+        </div>
       </div>
 
+      {activeTab === 'outgoing' ? (
+        <OutgoingInvoiceGenerator />
+      ) : (
+        <>
       <div 
         {...getRootProps()} 
         className={`border-2 border-dashed rounded-2xl p-10 flex flex-col items-center justify-center transition-colors cursor-pointer bg-white/50 backdrop-blur-sm
@@ -165,6 +186,8 @@ const Invoices = () => {
           </table>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 };
