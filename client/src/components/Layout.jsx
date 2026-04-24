@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, ReceiptText, Calculator, FileText, MessageSquare, LogOut } from 'lucide-react';
+import { LayoutDashboard, ReceiptText, Calculator, FileText, MessageSquare, LogOut, Building2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import AlertBell from './AlertBell';
 
@@ -42,7 +42,8 @@ const Layout = () => {
         <nav className="flex-1 px-4 py-4 overflow-y-auto space-y-1">
           <SidebarLink to="/dashboard" icon={LayoutDashboard} label="Dashboard" />
           <SidebarLink to="/transactions" icon={ReceiptText} label="Transactions" />
-          <SidebarLink to="/invoices" icon={FileText} label="Invoices (OCR)" />
+          <SidebarLink to="/bank-sync" icon={Building2} label="Bank Sync" />
+          <SidebarLink to="/invoices" icon={FileText} label="Invoicing" />
           <SidebarLink to="/chat" icon={MessageSquare} label="AI Advisor" />
           <SidebarLink to="/gst-calculator" icon={Calculator} label="GST Calculator" />
         </nav>

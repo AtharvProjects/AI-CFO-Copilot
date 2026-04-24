@@ -15,6 +15,7 @@ import Transactions from './pages/Transactions';
 import Invoices from './pages/Invoices';
 import AiChat from './pages/AiChat';
 import GstCalculator from './pages/GstCalculator';
+import BankSync from './pages/BankSync';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -35,6 +36,7 @@ const AppRoutes = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/transactions" element={<Transactions />} />
         <Route path="/invoices" element={<Invoices />} />
+        <Route path="/bank-sync" element={<BankSync />} />
         <Route path="/chat" element={<AiChat />} />
         <Route path="/gst-calculator" element={<GstCalculator />} />
       </Route>
