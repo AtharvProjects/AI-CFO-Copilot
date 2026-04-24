@@ -11,9 +11,13 @@ function NavHeader() {
       className="relative mx-auto flex w-fit rounded-full border-2 border-zinc-800 bg-zinc-900/50 backdrop-blur-md p-1 shadow-2xl"
       onMouseLeave={() => setPosition((pv) => ({ ...pv, opacity: 0 }))}
     >
-      <Tab setPosition={setPosition}>Home</Tab>
+      <Tab setPosition={setPosition}>
+        <Link to="/" className="px-3 py-1.5 md:px-5 md:py-3 block w-full h-full">Home</Link>
+      </Tab>
       <Tab setPosition={setPosition}>Features</Tab>
-      <Tab setPosition={setPosition}>Pricing</Tab>
+      <Tab setPosition={setPosition}>
+        <Link to="/pricing" className="px-3 py-1.5 md:px-5 md:py-3 block w-full h-full">Pricing</Link>
+      </Tab>
       <Tab setPosition={setPosition}>CFO Chat</Tab>
       <Tab setPosition={setPosition}>
         <Link to="/dashboard" className="px-3 py-1.5 md:px-5 md:py-3 block w-full h-full">Go to Dashboard</Link>

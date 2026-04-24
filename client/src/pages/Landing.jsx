@@ -1,14 +1,7 @@
 import React from 'react';
 import NavHeader from '../components/ui/nav-header';
 import HeroSection from '../components/ui/glassmorphism-trust-hero';
-import { PricingContainer } from '../components/ui/pricing-container';
 import { ShiningText } from '../components/ui/shining-text';
-
-const PRICING_PLANS = [
-  { name: "Starter", monthlyPrice: 0, yearlyPrice: 0, features: ["1 User", "50 Transactions/mo", "Basic Categorization", "Standard Support"], isPopular: false, accent: "bg-indigo-500", rotation: -2 },
-  { name: "Pro", monthlyPrice: 1999, yearlyPrice: 19990, features: ["3 Users", "Unlimited Transactions", "4 AI CFO Agents", "Priority Support"], isPopular: true, accent: "bg-indigo-600", rotation: 1 },
-  { name: "Enterprise", monthlyPrice: 4999, yearlyPrice: 49990, features: ["Unlimited Users", "Multi-GSTIN Support", "Custom Integrations", "24/7 Dedicated Support"], isPopular: false, accent: "bg-indigo-800", rotation: 2 },
-];
 
 export default function Landing() {
   return (
@@ -42,10 +35,7 @@ export default function Landing() {
         </div>
       </div>
 
-      {/* Pricing Section */}
-      <div id="pricing">
-        <PricingContainer title="Transparent Pricing for MSMEs" plans={PRICING_PLANS} />
-      </div>
+      {/* Pricing Section moved to /pricing */}
 
       {/* Simple Footer */}
       <footer className="py-12 bg-zinc-950 border-t border-white/10 text-center text-zinc-500 text-sm">
