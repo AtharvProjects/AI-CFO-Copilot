@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { ArrowUpRight, ArrowDownRight, IndianRupee, Wallet, LineChart as ChartIcon } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, Legend } from 'recharts';
+import { ArrowUpRight, ArrowDownRight, IndianRupee, Wallet, LineChart as ChartIcon, CreditCard, HandCoins } from 'lucide-react';
 import api from '../services/api';
 import { useSocket } from '../contexts/SocketContext';
 import toast from 'react-hot-toast';
@@ -59,8 +59,8 @@ const Dashboard = () => {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm transition-shadow hover:shadow-md">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-gray-500 font-medium text-sm">Total Income</h3>
             <div className="p-2 bg-green-50 rounded-lg text-green-600"><ArrowUpRight size={18} /></div>
@@ -68,7 +68,7 @@ const Dashboard = () => {
           <div className="text-2xl font-bold text-gray-800">₹{(kpis?.totalIncome / 100 || 0).toLocaleString()}</div>
         </div>
         
-        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm transition-shadow hover:shadow-md">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-gray-500 font-medium text-sm">Total Expense</h3>
             <div className="p-2 bg-red-50 rounded-lg text-red-600"><ArrowDownRight size={18} /></div>
@@ -76,7 +76,7 @@ const Dashboard = () => {
           <div className="text-2xl font-bold text-gray-800">₹{(kpis?.totalExpense / 100 || 0).toLocaleString()}</div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm transition-shadow hover:shadow-md">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-gray-500 font-medium text-sm">Net Profit</h3>
             <div className="p-2 bg-blue-50 rounded-lg text-blue-600"><IndianRupee size={18} /></div>
@@ -86,7 +86,26 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden">
+        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm transition-shadow hover:shadow-md">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-gray-500 font-medium text-sm">Total Receivables</h3>
+            <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600"><HandCoins size={18} /></div>
+          </div>
+          <div className="text-2xl font-bold text-gray-800">₹{(kpis?.receivables / 100 || 0).toLocaleString()}</div>
+          <div className="mt-2 flex items-center text-xs text-orange-500">
+            <span className="font-medium mr-1">Overdue:</span> ₹{((kpis?.receivables * 0.3) / 100 || 0).toLocaleString()}
+          </div>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm transition-shadow hover:shadow-md">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-gray-500 font-medium text-sm">Total Payables</h3>
+            <div className="p-2 bg-rose-50 rounded-lg text-rose-600"><CreditCard size={18} /></div>
+          </div>
+          <div className="text-2xl font-bold text-gray-800">₹{(kpis?.payables / 100 || 0).toLocaleString()}</div>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm transition-shadow hover:shadow-md relative overflow-hidden">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-gray-500 font-medium text-sm">Cash Runway</h3>
             <div className="p-2 bg-purple-50 rounded-lg text-purple-600"><Wallet size={18} /></div>
@@ -114,12 +133,63 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Cash Flow Line Chart */}
+      <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+        <h3 className="font-semibold text-gray-800 mb-6">Cash Flow</h3>
+        <div className="h-72">
+          {data.cashFlowData && data.cashFlowData.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data.cashFlowData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{fill: '#888', fontSize: 12}} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{fill: '#888', fontSize: 12}} tickFormatter={(val) => `₹${val}`} dx={-10} />
+                <Tooltip 
+                  cursor={{fill: 'rgba(0,0,0,0.02)'}}
+                  contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}}
+                  formatter={(value) => [`₹${value.toLocaleString()}`, '']}
+                />
+                <Legend iconType="circle" wrapperStyle={{paddingTop: '20px'}} />
+                <Bar dataKey="income" name="Income" fill="#3B82F6" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                <Bar dataKey="expense" name="Expense" fill="#F59E0B" radius={[4, 4, 0, 0]} maxBarSize={40} />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-full flex items-center justify-center text-gray-400 border border-dashed rounded-lg bg-gray-50/50">
+              No cash flow data available
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Top Expenses List (Zeni style) */}
+        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm col-span-1 lg:col-span-2">
+          <h3 className="font-semibold text-gray-800 mb-6">Top Expenses - This Month</h3>
+          <div className="space-y-5">
+            {data.topExpenses && data.topExpenses.length > 0 ? data.topExpenses.map((expense, idx) => {
+              const maxVal = data.topExpenses[0].value;
+              const width = Math.max((expense.value / maxVal) * 100, 5);
+              return (
+                <div key={idx} className="relative">
+                  <div className="flex justify-between text-sm mb-1 z-10 relative px-2">
+                    <span className="font-medium text-gray-700">{expense.name}</span>
+                    <span className="text-gray-600">₹{(expense.value / 100).toLocaleString()}</span>
+                  </div>
+                  <div className="absolute inset-0 bg-green-50 rounded z-0" style={{ width: `${width}%` }}></div>
+                </div>
+              );
+            }) : (
+              <div className="py-10 text-center text-gray-400">No expenses recorded</div>
+            )}
+          </div>
+        </div>
+
         {/* Expenses Donut */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-          <h3 className="font-semibold text-gray-800 mb-4">Expenses by Category</h3>
-          <div className="h-64">
+        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col">
+          <h3 className="font-semibold text-gray-800 mb-4">Expenses Breakdown</h3>
+          <div className="h-48 flex-1">
             {donutChartData && donutChartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -127,8 +197,8 @@ const Dashboard = () => {
                     data={donutChartData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
+                    innerRadius={50}
+                    outerRadius={70}
                     paddingAngle={5}
                     dataKey="value"
                   >
@@ -140,46 +210,48 @@ const Dashboard = () => {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full flex items-center justify-center text-gray-400">No expense data</div>
+              <div className="h-full flex items-center justify-center text-gray-400">No data</div>
             )}
           </div>
-          <div className="flex flex-wrap justify-center gap-3 mt-4">
+          <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 mt-4">
             {donutChartData?.map((entry, index) => (
-              <div key={index} className="flex items-center gap-1 text-xs text-gray-600">
-                <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
+              <div key={index} className="flex items-center gap-1.5 text-xs text-gray-600">
+                <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
                 {entry.name}
               </div>
             ))}
           </div>
         </div>
 
-        {/* Forecast Mini Chart */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-800">30-Day Forecast</h3>
-            <ChartIcon size={18} className="text-blue-500" />
-          </div>
-          <p className="text-sm text-gray-600 mb-6 flex-1">
-            {forecast?.narrative || "AI forecasting requires more historical data to generate reliable predictions."}
-          </p>
-          <div className="h-48 mt-auto">
-            {forecast?.data && forecast.data.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={forecast.data}>
-                  <XAxis dataKey="date" hide />
-                  <YAxis hide />
-                  <Tooltip formatter={(value) => `₹${(value / 100).toLocaleString()}`} />
-                  <Line type="monotone" dataKey="balance" stroke="#3B82F6" strokeWidth={3} dot={false} />
-                </LineChart>
-              </ResponsiveContainer>
-            ) : (
-               <div className="h-full flex items-center justify-center text-gray-400 border border-dashed rounded-lg bg-gray-50/50">
-                 Not enough data for forecast
-               </div>
-            )}
-          </div>
+      </div>
+
+      {/* Forecast Line Chart */}
+      <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold text-gray-800">30-Day Cash Forecast</h3>
+          <ChartIcon size={18} className="text-blue-500" />
+        </div>
+        <p className="text-sm text-gray-600 mb-6 max-w-2xl">
+          {forecast?.narrative || "AI forecasting requires more historical data to generate reliable predictions."}
+        </p>
+        <div className="h-64 mt-auto">
+          {forecast?.data && forecast.data.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={forecast.data}>
+                <XAxis dataKey="date" hide />
+                <YAxis hide />
+                <Tooltip formatter={(value) => `₹${(value / 100).toLocaleString()}`} />
+                <Line type="monotone" dataKey="balance" stroke="#8B5CF6" strokeWidth={3} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          ) : (
+             <div className="h-full flex items-center justify-center text-gray-400 border border-dashed rounded-lg bg-gray-50/50">
+               Not enough data for forecast
+             </div>
+          )}
         </div>
       </div>
+
     </div>
   );
 };

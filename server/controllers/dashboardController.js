@@ -43,15 +43,36 @@ const dashboardController = {
       const budget = user?.monthly_budget || 0;
       const budgetUsagePercent = budget > 0 ? Math.min((totalExpense / budget) * 100, 100) : 0;
 
+      // 5. Monthly Cash Flow & Top Expenses
+      const monthlyData = {};
+      allTransactions.forEach(tx => {
+        const month = new Date(tx.date).toLocaleString('default', { month: 'short' });
+        if (!monthlyData[month]) monthlyData[month] = { month, income: 0, expense: 0 };
+        
+        if (tx.type === 'income') monthlyData[month].income += (parseInt(tx.amount) / 100);
+        if (tx.type === 'expense') monthlyData[month].expense += (parseInt(tx.amount) / 100);
+      });
+      const cashFlowData = Object.values(monthlyData);
+      
+      const topExpenses = [...donutChartData].sort((a, b) => b.value - a.value).slice(0, 5);
+
+      // 6. Receivables and Payables (Mock for UI Demo)
+      const receivables = totalIncome * 0.15;
+      const payables = totalExpense * 0.12;
+
       res.json({
         kpis: {
           totalIncome,
           totalExpense,
           netProfit,
-          cashRunwayDays: forecastData.runway
+          cashRunwayDays: forecastData.runway,
+          receivables,
+          payables
         },
         forecast: forecastData,
         donutChartData,
+        cashFlowData,
+        topExpenses,
         budget: {
           total: budget,
           used: totalExpense,
