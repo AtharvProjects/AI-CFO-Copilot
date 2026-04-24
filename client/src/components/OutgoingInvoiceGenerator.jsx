@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import { Send, FileDown, Plus, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -54,7 +54,7 @@ const OutgoingInvoiceGenerator = () => {
       `Rs. ${(item.quantity * item.price).toFixed(2)}`
     ]);
 
-    doc.autoTable({
+    autoTable(doc, {
       startY: 70,
       head: [tableColumn],
       body: tableRows,
