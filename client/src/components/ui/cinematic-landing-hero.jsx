@@ -83,12 +83,12 @@ const INJECTED_STYLES = `
       mix-blend-mode: screen; transition: opacity 0.3s ease;
   }
 
-  /* Realistic iPhone Mockup Hardware */
-  .iphone-bezel {
+  /* Realistic Laptop Mockup Hardware */
+  .laptop-bezel {
       background-color: #111;
       box-shadow: 
           inset 0 0 0 2px #52525B, 
-          inset 0 0 0 7px #000, 
+          inset 0 0 0 4px #000, 
           0 40px 80px -15px rgba(0,0,0,0.9),
           0 15px 25px -5px rgba(0,0,0,0.7);
       transform-style: preserve-3d;
@@ -335,126 +335,133 @@ export function CinematicHero({
         >
           <div className="card-sheen" aria-hidden="true" />
 
-          {/* DYNAMIC RESPONSIVE GRID: Flex-col on mobile to force order, Grid on desktop */}
-          <div className="relative w-full h-full max-w-7xl mx-auto px-4 lg:px-12 flex flex-col justify-evenly lg:grid lg:grid-cols-3 items-center lg:gap-8 z-10 py-6 lg:py-0">
+          {/* BACKGROUND TEXTS & LAPTOP MOCKUP */}
+          <div className="relative w-full h-full max-w-[1400px] mx-auto px-4 lg:px-12 flex items-center justify-center z-10 py-6 lg:py-0">
             
-            {/* 1. TOP (Mobile) / RIGHT (Desktop): BRAND NAME */}
-            <div className="card-right-text gsap-reveal order-1 lg:order-3 flex justify-center lg:justify-end z-20 w-full">
-              <h2 className="text-6xl md:text-[6rem] lg:text-[6rem] font-black uppercase tracking-tighter text-card-silver-matte lg:mt-0 leading-tight">
+            {/* BRAND NAME (Background/Right) */}
+            <div className="card-right-text gsap-reveal absolute top-12 md:top-24 right-4 md:right-12 z-0 opacity-20 lg:opacity-100 flex justify-end">
+              <h2 className="text-6xl md:text-[8rem] lg:text-[10rem] font-black uppercase tracking-tighter text-card-silver-matte leading-none">
                 {brandName}
               </h2>
             </div>
 
-            {/* 2. MIDDLE (Mobile) / CENTER (Desktop): IPHONE MOCKUP */}
-            <div className="mockup-scroll-wrapper order-2 lg:order-2 relative w-full h-[380px] lg:h-[600px] flex items-center justify-center z-10" style={{ perspective: "1000px" }}>
+            {/* ACCOUNTABILITY TEXT (Background/Left) */}
+            <div className="card-left-text gsap-reveal absolute bottom-12 md:bottom-24 left-4 md:left-12 z-0 max-w-sm lg:max-w-md">
+              <h3 className="text-white text-2xl md:text-3xl lg:text-4xl font-bold mb-3 tracking-tight">
+                {cardHeading}
+              </h3>
+              <p className="hidden md:block text-indigo-100/70 text-sm md:text-base lg:text-lg font-normal leading-relaxed">
+                {cardDescription}
+              </p>
+            </div>
+
+            {/* THE LAPTOP MOCKUP */}
+            <div className="mockup-scroll-wrapper relative w-full flex items-center justify-center z-10" style={{ perspective: "1500px" }}>
               
-              {/* Inner wrapper for safe CSS scaling that doesn't conflict with GSAP */}
-              <div className="relative w-full h-full flex items-center justify-center transform scale-[0.65] md:scale-85 lg:scale-100">
+              <div className="relative w-full h-full flex items-center justify-center transform scale-[0.45] sm:scale-[0.6] md:scale-[0.8] lg:scale-100 xl:scale-110">
                 
-                {/* The iPhone Bezel */}
+                {/* Laptop Bezel Container */}
                 <div
                   ref={mockupRef}
-                  className="relative w-[280px] h-[580px] rounded-[3rem] iphone-bezel flex flex-col will-change-transform transform-style-3d"
+                  className="relative w-[800px] h-[500px] rounded-2xl laptop-bezel flex flex-col will-change-transform transform-style-3d"
                 >
-                  {/* Physical Hardware Buttons */}
-                  <div className="absolute top-[120px] -left-[3px] w-[3px] h-[25px] hardware-btn rounded-l-md z-0" aria-hidden="true" />
-                  <div className="absolute top-[160px] -left-[3px] w-[3px] h-[45px] hardware-btn rounded-l-md z-0" aria-hidden="true" />
-                  <div className="absolute top-[220px] -left-[3px] w-[3px] h-[45px] hardware-btn rounded-l-md z-0" aria-hidden="true" />
-                  <div className="absolute top-[170px] -right-[3px] w-[3px] h-[70px] hardware-btn rounded-r-md z-0 scale-x-[-1]" aria-hidden="true" />
+                  {/* Laptop Camera/Notch */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[70px] h-[18px] bg-black rounded-b-xl z-50 flex items-center justify-center border-b border-white/5 shadow-[0_4px_10px_rgba(0,0,0,0.5)]">
+                    <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.8)] animate-pulse" />
+                  </div>
 
                   {/* Inner Screen Container */}
-                  <div className="absolute inset-[7px] bg-[#050914] rounded-[2.5rem] overflow-hidden shadow-[inset_0_0_15px_rgba(0,0,0,1)] text-white z-10">
+                  <div className="absolute inset-[10px] bg-[#050914] rounded-lg overflow-hidden shadow-[inset_0_0_25px_rgba(0,0,0,1)] text-white z-10">
                     <div className="absolute inset-0 screen-glare z-40 pointer-events-none" aria-hidden="true" />
 
-                    {/* Dynamic Island Notch */}
-                    <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[100px] h-[28px] bg-black rounded-full z-50 flex items-center justify-end px-3 shadow-[inset_0_-1px_2px_rgba(255,255,255,0.1)]">
-                      <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.8)] animate-pulse" />
-                    </div>
-
-                    {/* App Interface */}
-                    <div className="relative w-full h-full pt-12 px-5 pb-8 flex flex-col">
-                      <div className="phone-widget flex justify-between items-center mb-8">
-                        <div className="flex flex-col">
-                          <span className="text-[10px] text-neutral-400 uppercase tracking-widest font-bold mb-1">Today</span>
-                          <span className="text-xl font-bold tracking-tight text-white drop-shadow-md">Finances</span>
+                    {/* App Interface (Dashboard Layout) */}
+                    <div className="relative w-full h-full pt-10 px-8 pb-8 flex flex-col">
+                      {/* Header */}
+                      <div className="phone-widget flex justify-between items-center mb-10 border-b border-white/10 pb-5">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center font-bold text-sm border border-indigo-500/30 shadow-lg shadow-indigo-500/20">AI</div>
+                          <span className="text-2xl font-bold tracking-tight text-white drop-shadow-md">AI CFO Dashboard</span>
                         </div>
-                        <div className="w-9 h-9 rounded-full bg-indigo-500/20 text-indigo-300 flex items-center justify-center font-bold text-sm border border-indigo-500/30 shadow-lg shadow-indigo-500/20">AI</div>
-                      </div>
-
-                      <div className="phone-widget relative w-44 h-44 mx-auto flex items-center justify-center mb-8 drop-shadow-[0_15px_25px_rgba(0,0,0,0.8)]">
-                        <svg className="absolute inset-0 w-full h-full" aria-hidden="true">
-                          <circle cx="88" cy="88" r="64" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="12" />
-                          <circle className="progress-ring" cx="88" cy="88" r="64" fill="none" stroke="#6366f1" strokeWidth="12" />
-                        </svg>
-                        <div className="text-center z-10 flex flex-col items-center">
-                          <span className="counter-val text-4xl font-extrabold tracking-tighter text-white">0</span>
-                          <span className="text-[8px] text-indigo-200/50 uppercase tracking-[0.1em] font-bold mt-0.5">{metricLabel}</span>
+                        <div className="flex items-center gap-4">
+                          <span className="text-xs text-neutral-400 uppercase tracking-widest font-bold">Today</span>
+                          <div className="h-2 w-16 bg-white/10 rounded-full" />
+                          <div className="h-2 w-16 bg-white/10 rounded-full" />
+                          <div className="w-8 h-8 rounded-full bg-indigo-500/50 border border-white/10" />
                         </div>
                       </div>
 
-                      <div className="space-y-3">
-                        <div className="phone-widget widget-depth rounded-2xl p-3 flex items-center">
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500/20 to-indigo-600/5 flex items-center justify-center mr-3 border border-indigo-400/20 shadow-inner">
-                            <svg className="w-4 h-4 text-indigo-400 drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                          </div>
-                          <div className="flex-1">
-                            <div className="h-2 w-20 bg-neutral-300 rounded-full mb-2 shadow-inner" />
-                            <div className="h-1.5 w-12 bg-neutral-600 rounded-full shadow-inner" />
+                      {/* Main Grid */}
+                      <div className="grid grid-cols-3 gap-8 flex-1">
+                        
+                        {/* Left Metric */}
+                        <div className="col-span-1 phone-widget relative flex flex-col items-center justify-center widget-depth rounded-3xl border border-white/5 drop-shadow-[0_15px_25px_rgba(0,0,0,0.5)]">
+                          <svg className="absolute inset-0 w-full h-full" aria-hidden="true" style={{ transform: "scale(0.85)" }}>
+                            <circle cx="50%" cy="50%" r="40%" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="16" />
+                            <circle className="progress-ring" cx="50%" cy="50%" r="40%" fill="none" stroke="#6366f1" strokeWidth="16" style={{ transformOrigin: "center" }} />
+                          </svg>
+                          <div className="text-center z-10 flex flex-col items-center">
+                            <span className="counter-val text-6xl font-extrabold tracking-tighter text-white drop-shadow-lg">0</span>
+                            <span className="text-[11px] text-indigo-200/50 uppercase tracking-[0.1em] font-bold mt-2">{metricLabel}</span>
                           </div>
                         </div>
-                        <div className="phone-widget widget-depth rounded-2xl p-3 flex items-center">
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/5 flex items-center justify-center mr-3 border border-emerald-400/20 shadow-inner">
-                            <svg className="w-4 h-4 text-emerald-400 drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                            </svg>
+
+                        {/* Right Content */}
+                        <div className="col-span-2 flex flex-col gap-6">
+                          <div className="flex-1 phone-widget widget-depth rounded-3xl p-6 flex items-center border border-white/5">
+                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-indigo-600/5 flex items-center justify-center mr-6 border border-indigo-400/20 shadow-inner">
+                              <svg className="w-8 h-8 text-indigo-400 drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            </div>
+                            <div className="flex-1 space-y-3">
+                              <div className="h-3 w-48 bg-neutral-300 rounded-full shadow-inner" />
+                              <div className="h-2 w-32 bg-neutral-600 rounded-full shadow-inner" />
+                            </div>
                           </div>
-                          <div className="flex-1">
-                            <div className="h-2 w-16 bg-neutral-300 rounded-full mb-2 shadow-inner" />
-                            <div className="h-1.5 w-24 bg-neutral-600 rounded-full shadow-inner" />
+                          
+                          <div className="flex-1 phone-widget widget-depth rounded-3xl p-6 flex items-center border border-white/5">
+                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/5 flex items-center justify-center mr-6 border border-emerald-400/20 shadow-inner">
+                              <svg className="w-8 h-8 text-emerald-400 drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                            <div className="flex-1 space-y-3">
+                              <div className="h-3 w-36 bg-neutral-300 rounded-full shadow-inner" />
+                              <div className="h-2 w-56 bg-neutral-600 rounded-full shadow-inner" />
+                            </div>
                           </div>
                         </div>
                       </div>
 
-                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[120px] h-[4px] bg-white/20 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
                     </div>
                   </div>
+
+                  {/* Laptop Base Lip */}
+                  <div className="absolute -bottom-[6px] left-1/2 -translate-x-1/2 w-[240px] h-[6px] bg-white/20 rounded-t-xl shadow-[0_-1px_2px_rgba(255,255,255,0.1)] z-50" />
                 </div>
 
                 {/* Floating Glass Badges */}
-                <div className="floating-badge absolute flex top-6 lg:top-12 left-[-15px] lg:left-[-80px] floating-ui-badge rounded-xl lg:rounded-2xl p-3 lg:p-4 items-center gap-3 lg:gap-4 z-30">
-                  <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-b from-indigo-500/20 to-indigo-900/10 flex items-center justify-center border border-indigo-400/30 shadow-inner">
-                    <span className="text-base lg:text-xl drop-shadow-lg" aria-hidden="true">💡</span>
+                <div className="floating-badge absolute flex top-0 left-[-20px] lg:left-[-60px] floating-ui-badge rounded-2xl p-4 items-center gap-4 z-30">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-b from-indigo-500/20 to-indigo-900/10 flex items-center justify-center border border-indigo-400/30 shadow-inner">
+                    <span className="text-xl drop-shadow-lg" aria-hidden="true">💡</span>
                   </div>
                   <div>
-                    <p className="text-white text-xs lg:text-sm font-bold tracking-tight">AI Insights</p>
-                    <p className="text-indigo-200/50 text-[10px] lg:text-xs font-medium">Cash flow optimal</p>
+                    <p className="text-white text-sm font-bold tracking-tight">AI Insights</p>
+                    <p className="text-indigo-200/50 text-xs font-medium">Cash flow optimal</p>
                   </div>
                 </div>
 
-                <div className="floating-badge absolute flex bottom-12 lg:bottom-20 right-[-15px] lg:right-[-80px] floating-ui-badge rounded-xl lg:rounded-2xl p-3 lg:p-4 items-center gap-3 lg:gap-4 z-30">
-                  <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-b from-emerald-500/20 to-emerald-900/10 flex items-center justify-center border border-emerald-400/30 shadow-inner">
-                    <span className="text-base lg:text-lg drop-shadow-lg" aria-hidden="true">⚡️</span>
+                <div className="floating-badge absolute flex bottom-10 right-[-20px] lg:right-[-60px] floating-ui-badge rounded-2xl p-4 items-center gap-4 z-30">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-b from-emerald-500/20 to-emerald-900/10 flex items-center justify-center border border-emerald-400/30 shadow-inner">
+                    <span className="text-xl drop-shadow-lg" aria-hidden="true">⚡️</span>
                   </div>
                   <div>
-                    <p className="text-white text-xs lg:text-sm font-bold tracking-tight">Invoice Scanned</p>
-                    <p className="text-emerald-200/50 text-[10px] lg:text-xs font-medium">Data extracted</p>
+                    <p className="text-white text-sm font-bold tracking-tight">Invoice Scanned</p>
+                    <p className="text-emerald-200/50 text-xs font-medium">Data extracted</p>
                   </div>
                 </div>
 
               </div>
-            </div>
-
-            {/* 3. BOTTOM (Mobile) / LEFT (Desktop): ACCOUNTABILITY TEXT */}
-            <div className="card-left-text gsap-reveal order-3 lg:order-1 flex flex-col justify-center text-center lg:text-left z-20 w-full lg:max-w-none px-4 lg:px-0">
-              <h3 className="text-white text-2xl md:text-3xl lg:text-4xl font-bold mb-0 lg:mb-5 tracking-tight">
-                {cardHeading}
-              </h3>
-              {/* HIDDEN ON MOBILE */}
-              <p className="hidden md:block text-indigo-100/70 text-sm md:text-base lg:text-lg font-normal leading-relaxed mx-auto lg:mx-0 max-w-sm lg:max-w-none">
-                {cardDescription}
-              </p>
             </div>
 
           </div>
