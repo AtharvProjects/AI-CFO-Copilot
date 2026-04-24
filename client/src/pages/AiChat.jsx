@@ -38,7 +38,7 @@ const AiChat = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5110/api'}/chat`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8080/api'}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
