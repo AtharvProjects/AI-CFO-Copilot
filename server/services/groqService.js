@@ -42,7 +42,7 @@ const groqService = {
     try {
       const stream = await groq.chat.completions.create({
         messages,
-        model: 'llama-3.1-70b-versatile',
+        model: 'llama-3.1-8b-instant',
         temperature: 0.5,
         stream: true,
       });

@@ -23,20 +23,22 @@ const chatController = {
 
       switch (parseInt(agentId)) {
         case 1:
-          systemPrompt += "You are the Cash Flow Expert. Focus on liquidity, shortfalls, and forecasting.";
+          systemPrompt += "You are the Cash Flow Expert. Focus on liquidity, shortfalls, and forecasting. ";
           break;
         case 2:
-          systemPrompt += "You are the Risk Expert. Focus on identifying anomalies, unusual patterns, and risk rating.";
+          systemPrompt += "You are the Risk Expert. Focus on identifying anomalies, unusual patterns, and risk rating. ";
           break;
         case 3:
-          systemPrompt += "You are the Tax/GST Expert. Focus on GST liability, input tax credit, and tax optimization.";
+          systemPrompt += "You are the Tax/GST Expert. Focus on GST liability, input tax credit, and tax optimization. ";
           break;
         case 4:
-          systemPrompt += "You are the Growth Expert. Focus on ROI issues, revenue growth, and historical comparisons.";
+          systemPrompt += "You are the Growth Expert. Focus on ROI issues, revenue growth, and historical comparisons. ";
           break;
         default:
-          systemPrompt += "You are a general Financial Advisor.";
+          systemPrompt += "You are a general Financial Advisor. ";
       }
+
+      systemPrompt += "Provide clear, concise, and professional advice. Avoid repeating words or phrases. Use markdown formatting for readability.";
 
       // 3. Prepare messages array
       const messages = [

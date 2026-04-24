@@ -36,7 +36,7 @@ const AiChat = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5099/api'}/chat`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5100/api'}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,10 +59,10 @@ const AiChat = () => {
         if (value) {
           const chunk = decoder.decode(value, { stream: true });
           setMessages((prev) => {
-            const newMessages = [...prev];
-            const lastMsg = newMessages[newMessages.length - 1];
-            lastMsg.content += chunk;
-            return newMessages;
+            const lastIdx = prev.length - 1;
+            return prev.map((msg, i) => 
+              i === lastIdx ? { ...msg, content: msg.content + chunk } : msg
+            );
           });
         }
       }
