@@ -10,6 +10,7 @@ const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 const Dashboard = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [scenarioAdj, setScenarioAdj] = useState(0);
   const socket = useSocket();
 
   const fetchDashboardData = async () => {
@@ -53,10 +54,26 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Overview</h1>
-        <p className="text-sm text-gray-500 mt-1">Real-time financial pulse of your business.</p>
+      <div className="mb-6 flex justify-between items-end">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Overview</h1>
+          <p className="text-sm text-gray-500 mt-1">Real-time financial pulse of your business.</p>
+        </div>
       </div>
+
+      {kpis?.totalIncome === 0 && kpis?.totalExpense === 0 && (
+        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-6 flex flex-col sm:flex-row items-center gap-6">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center shrink-0">
+            <span className="text-2xl">👋</span>
+          </div>
+          <div className="flex-1 text-center sm:text-left">
+            <h2 className="text-lg font-bold text-gray-800 mb-1">Welcome to your AI CFO Copilot!</h2>
+            <p className="text-gray-600 text-sm max-w-2xl">
+              Your dashboard looks a little empty. Let's get started by recording your first transaction, uploading a vendor bill, or syncing your bank account.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -225,31 +242,87 @@ const Dashboard = () => {
 
       </div>
 
-      {/* Forecast Line Chart */}
-      <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-gray-800">30-Day Cash Forecast</h3>
-          <ChartIcon size={18} className="text-blue-500" />
+      {/* Forecast Line Chart & Scenarios */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col lg:col-span-2">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-semibold text-gray-800">30-Day Cash Forecast</h3>
+            <ChartIcon size={18} className="text-blue-500" />
+          </div>
+          <p className="text-sm text-gray-600 mb-6 max-w-2xl">
+            {forecast?.narrative || "AI forecasting requires more historical data to generate reliable predictions."}
+          </p>
+          <div className="h-64 mt-auto">
+            {forecast?.data && forecast.data.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={forecast.data.map(d => ({...d, balance: d.balance + (scenarioAdj * 100)}))}>
+                  <XAxis dataKey="date" hide />
+                  <YAxis hide />
+                  <Tooltip formatter={(value) => `₹${(value / 100).toLocaleString()}`} />
+                  <Line type="monotone" dataKey="balance" stroke="#8B5CF6" strokeWidth={3} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+               <div className="h-full flex items-center justify-center text-gray-400 border border-dashed rounded-lg bg-gray-50/50">
+                 Not enough data for forecast
+               </div>
+            )}
+          </div>
         </div>
-        <p className="text-sm text-gray-600 mb-6 max-w-2xl">
-          {forecast?.narrative || "AI forecasting requires more historical data to generate reliable predictions."}
-        </p>
-        <div className="h-64 mt-auto">
-          {forecast?.data && forecast.data.length > 0 ? (
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={forecast.data}>
-                <XAxis dataKey="date" hide />
-                <YAxis hide />
-                <Tooltip formatter={(value) => `₹${(value / 100).toLocaleString()}`} />
-                <Line type="monotone" dataKey="balance" stroke="#8B5CF6" strokeWidth={3} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          ) : (
-             <div className="h-full flex items-center justify-center text-gray-400 border border-dashed rounded-lg bg-gray-50/50">
-               Not enough data for forecast
-             </div>
-          )}
+
+        {/* Scenario Modeling Panel */}
+        <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-6 rounded-2xl border border-blue-100 shadow-sm flex flex-col lg:col-span-1">
+          <div className="mb-4">
+            <h3 className="font-semibold text-gray-800">Scenario Modeling</h3>
+            <p className="text-xs text-gray-500 mt-1">Adjust variables to see forecast impact</p>
+          </div>
+          
+          <div className="space-y-6 flex-1">
+            <div>
+              <div className="flex justify-between text-sm mb-2">
+                <span className="font-medium text-gray-700">Planned New Hires</span>
+                <span className="text-blue-600 font-bold">{Math.floor(Math.abs(Math.min(0, scenarioAdj)) / 50000)}</span>
+              </div>
+              <input 
+                type="range" 
+                min="-200000" 
+                max="0" 
+                step="50000"
+                value={Math.min(0, scenarioAdj)}
+                onChange={(e) => setScenarioAdj(Number(e.target.value) + Math.max(0, scenarioAdj))}
+                className="w-full accent-blue-600"
+              />
+              <p className="text-xs text-gray-500 mt-1">-₹50k per hire</p>
+            </div>
+
+            <div>
+              <div className="flex justify-between text-sm mb-2">
+                <span className="font-medium text-gray-700">New Client Revenue</span>
+                <span className="text-green-600 font-bold">+₹{Math.max(0, scenarioAdj).toLocaleString()}</span>
+              </div>
+              <input 
+                type="range" 
+                min="0" 
+                max="500000" 
+                step="50000"
+                value={Math.max(0, scenarioAdj)}
+                onChange={(e) => setScenarioAdj(Number(e.target.value) + Math.min(0, scenarioAdj))}
+                className="w-full accent-green-500"
+              />
+            </div>
+          </div>
+          
+          <div className="mt-6 pt-4 border-t border-blue-200/50">
+            <div className="flex justify-between items-center text-sm">
+              <span className="font-medium text-gray-700">Net Scenario Impact</span>
+              <span className={`font-bold ${scenarioAdj >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {scenarioAdj > 0 ? '+' : ''}₹{scenarioAdj.toLocaleString()}
+              </span>
+            </div>
+          </div>
         </div>
+
       </div>
 
     </div>

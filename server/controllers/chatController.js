@@ -17,9 +17,18 @@ const chatController = {
       });
       const currentMonthExpenses = monthData?.[0]?.total || 0;
 
+      // Fetch last 50 transactions for Natural Language Data Querying (Text-to-SQL Simulation)
+      const { data: recentTxs } = await supabase
+        .from('transactions')
+        .select('date, description, amount, category, type')
+        .eq('user_id', userId)
+        .order('date', { ascending: false })
+        .limit(50);
+
       // 2. Build Agent System Prompt
       let systemPrompt = `You are an AI CFO Copilot for an MSME named ${userData.business_name}. `;
       systemPrompt += `Monthly Budget: ${userData.monthly_budget}. Current Month Expenses: ${currentMonthExpenses}. `;
+      systemPrompt += `\n[DATA CONTEXT]: Here are the last 50 transactions for this business: ${JSON.stringify(recentTxs)}. If the user asks for data aggregations, use this data to perform calculations and ALWAYS return a clean Markdown Table showing the results. `;
 
       switch (parseInt(agentId)) {
         case 1:

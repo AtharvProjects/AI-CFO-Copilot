@@ -78,6 +78,57 @@ const initCronJobs = () => {
     }
   });
 
+  // 4. Proactive Anomaly Detection (Phase 3) - Runs daily at 2:00 AM
+  cron.schedule('0 2 * * *', async () => {
+    console.log('Running Proactive Anomaly Detection Cron Job...');
+    try {
+      const { data: users, error: userError } = await supabase.from('users').select('id');
+      if (userError) throw userError;
+
+      // Calculate date range for the last 3 days
+      const threeDaysAgo = new Date();
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+
+      for (const user of users) {
+        // Fetch recent transactions
+        const { data: txs, error: txError } = await supabase
+          .from('transactions')
+          .select('*')
+          .eq('user_id', user.id)
+          .gte('date', threeDaysAgo.toISOString().split('T')[0]);
+
+        if (txError) continue;
+
+        // Detect Duplicates (same amount, same date, same description)
+        const duplicates = {};
+        txs.forEach(tx => {
+          const key = `${tx.amount}_${tx.date}_${tx.description}`;
+          if (duplicates[key]) {
+            duplicates[key].push(tx);
+          } else {
+            duplicates[key] = [tx];
+          }
+        });
+
+        for (const [key, group] of Object.entries(duplicates)) {
+          if (group.length > 1) {
+            const alert = {
+              user_id: user.id,
+              type: 'anomaly_detected',
+              severity: 'medium',
+              message: `Anomaly: We detected ${group.length} identical charges of ₹${Math.abs(group[0].amount / 100)} for "${group[0].description}" on ${group[0].date}.`,
+            };
+            
+            await supabase.from('alerts').insert([alert]);
+            socketService.emitAlert(user.id, alert.type, alert);
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error in Anomaly Detection Cron:', err);
+    }
+  });
+
   console.log('Cron jobs initialized.');
 };
 
