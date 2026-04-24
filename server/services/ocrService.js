@@ -3,6 +3,7 @@ const sharp = require('sharp');
 const path = require('path');
 const groqService = require('./groqService');
 const fs = require('fs');
+const pdfParse = require('pdf-parse');
 
 const ocrService = {
   /**
@@ -24,16 +25,26 @@ const ocrService = {
   /**
    * Extract text and parse with AI
    */
-  async processInvoice(imagePath) {
+  async processInvoice(imagePath, originalName = '') {
+    let text = '';
     let processedPath = null;
+    
     try {
-      processedPath = await this.preprocessImage(imagePath);
+      const ext = path.extname(originalName || imagePath).toLowerCase();
       
-      const { data: { text } } = await Tesseract.recognize(
-        processedPath,
-        'eng',
-        { logger: m => console.log('OCR Progress:', m.progress) }
-      );
+      if (ext === '.pdf') {
+        const dataBuffer = fs.readFileSync(imagePath);
+        const pdfData = await pdfParse(dataBuffer);
+        text = pdfData.text;
+      } else {
+        processedPath = await this.preprocessImage(imagePath);
+        const { data: tesseractData } = await Tesseract.recognize(
+          processedPath,
+          'eng',
+          { logger: m => console.log('OCR Progress:', m.progress) }
+        );
+        text = tesseractData.text;
+      }
 
       const parsedData = await groqService.parseInvoiceOCR(text);
       

@@ -9,7 +9,7 @@ const invoiceController = {
       const imagePath = req.file.path;
       
       // 1. Process OCR and AI parsing
-      const { rawText, parsedData } = await ocrService.processInvoice(imagePath);
+      const { rawText, parsedData } = await ocrService.processInvoice(imagePath, req.file.originalname);
 
       // 2. Insert into invoices table
       const invoiceObj = {
