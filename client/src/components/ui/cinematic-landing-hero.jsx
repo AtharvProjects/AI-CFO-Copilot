@@ -336,34 +336,34 @@ export function CinematicHero({
           <div className="card-sheen" aria-hidden="true" />
 
           {/* BACKGROUND TEXTS & LAPTOP MOCKUP */}
-          <div className="relative w-full h-full max-w-[1400px] mx-auto px-4 lg:px-12 flex items-center justify-center z-10 py-6 lg:py-0">
+          <div className="relative w-full h-full max-w-[1400px] mx-auto px-6 lg:px-12 flex items-center justify-center z-10 py-12 lg:py-0">
             
-            {/* BRAND NAME (Background/Right) */}
-            <div className="card-right-text gsap-reveal absolute top-12 md:top-24 right-4 md:right-12 z-0 opacity-20 lg:opacity-100 flex justify-end">
-              <h2 className="text-6xl md:text-[8rem] lg:text-[10rem] font-black uppercase tracking-tighter text-card-silver-matte leading-none">
+            {/* BRAND NAME (Ambient Background) */}
+            <div className="card-right-text gsap-reveal absolute top-10 md:top-20 right-6 md:right-16 z-0 opacity-10 lg:opacity-60 flex justify-end pointer-events-none">
+              <h2 className="text-7xl md:text-[9rem] lg:text-[11rem] font-black uppercase tracking-tighter text-card-silver-matte leading-none">
                 {brandName}
               </h2>
             </div>
 
-            {/* ACCOUNTABILITY TEXT (Background/Left) */}
-            <div className="card-left-text gsap-reveal absolute bottom-12 md:bottom-24 left-4 md:left-12 z-0 max-w-sm lg:max-w-md">
-              <h3 className="text-white text-2xl md:text-3xl lg:text-4xl font-bold mb-3 tracking-tight">
+            {/* ACCOUNTABILITY TEXT (Foreground Top-Left) */}
+            <div className="card-left-text gsap-reveal absolute top-12 md:top-24 left-6 md:left-16 z-30 max-w-sm lg:max-w-lg">
+              <h3 className="text-white text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 tracking-tight drop-shadow-xl">
                 {cardHeading}
               </h3>
-              <p className="hidden md:block text-indigo-100/70 text-sm md:text-base lg:text-lg font-normal leading-relaxed">
+              <p className="hidden md:block text-zinc-300 text-base lg:text-xl font-medium leading-relaxed drop-shadow-md">
                 {cardDescription}
               </p>
             </div>
 
             {/* THE LAPTOP MOCKUP */}
-            <div className="mockup-scroll-wrapper relative w-full flex items-center justify-center z-10" style={{ perspective: "1500px" }}>
+            <div className="mockup-scroll-wrapper relative w-full flex items-center justify-center z-20 mt-24 lg:mt-32" style={{ perspective: "1500px" }}>
               
-              <div className="relative w-full h-full flex items-center justify-center transform scale-[0.45] sm:scale-[0.6] md:scale-[0.8] lg:scale-100 xl:scale-110">
+              <div className="relative w-full h-full flex items-center justify-center transform scale-[0.5] sm:scale-[0.65] md:scale-[0.85] lg:scale-100">
                 
                 {/* Laptop Bezel Container */}
                 <div
                   ref={mockupRef}
-                  className="relative w-[800px] h-[500px] rounded-2xl laptop-bezel flex flex-col will-change-transform transform-style-3d"
+                  className="relative w-[800px] h-[500px] rounded-2xl laptop-bezel flex flex-col will-change-transform transform-style-3d bg-[#111]"
                 >
                   {/* Laptop Camera/Notch */}
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[70px] h-[18px] bg-black rounded-b-xl z-50 flex items-center justify-center border-b border-white/5 shadow-[0_4px_10px_rgba(0,0,0,0.5)]">
@@ -371,7 +371,7 @@ export function CinematicHero({
                   </div>
 
                   {/* Inner Screen Container */}
-                  <div className="absolute inset-[10px] bg-[#050914] rounded-lg overflow-hidden shadow-[inset_0_0_25px_rgba(0,0,0,1)] text-white z-10">
+                  <div className="absolute inset-[10px] bg-[#050914] rounded-lg overflow-hidden shadow-[inset_0_0_25px_rgba(0,0,0,1)] text-white z-10 border border-white/10">
                     <div className="absolute inset-0 screen-glare z-40 pointer-events-none" aria-hidden="true" />
 
                     {/* App Interface (Dashboard Layout) */}
@@ -441,7 +441,7 @@ export function CinematicHero({
                 </div>
 
                 {/* Floating Glass Badges */}
-                <div className="floating-badge absolute flex top-0 left-[-20px] lg:left-[-60px] floating-ui-badge rounded-2xl p-4 items-center gap-4 z-30">
+                <div className="floating-badge absolute flex top-8 lg:top-16 left-[-10px] lg:left-[-40px] floating-ui-badge rounded-2xl p-4 items-center gap-4 z-30 transform hover:scale-105 transition-transform">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-b from-indigo-500/20 to-indigo-900/10 flex items-center justify-center border border-indigo-400/30 shadow-inner">
                     <span className="text-xl drop-shadow-lg" aria-hidden="true">💡</span>
                   </div>
@@ -451,7 +451,7 @@ export function CinematicHero({
                   </div>
                 </div>
 
-                <div className="floating-badge absolute flex bottom-10 right-[-20px] lg:right-[-60px] floating-ui-badge rounded-2xl p-4 items-center gap-4 z-30">
+                <div className="floating-badge absolute flex bottom-16 lg:bottom-24 right-[-10px] lg:right-[-40px] floating-ui-badge rounded-2xl p-4 items-center gap-4 z-30 transform hover:scale-105 transition-transform">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-b from-emerald-500/20 to-emerald-900/10 flex items-center justify-center border border-emerald-400/30 shadow-inner">
                     <span className="text-xl drop-shadow-lg" aria-hidden="true">⚡️</span>
                   </div>
