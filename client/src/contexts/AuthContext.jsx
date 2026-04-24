@@ -7,24 +7,18 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const demoUser = {
+    id: '1c62c35c-4889-4be5-8167-217fdddb7cad',
+    email: 'demo@aicfo.in',
+    business_name: 'Sharma Electronics',
+    monthly_budget: 50000000
+  };
+
+  const [user, setUser] = useState(demoUser);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const initAuth = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const res = await api.get('/auth/profile');
-          setUser(res.data.user);
-        } catch (error) {
-          console.error('Auth initialization error:', error);
-          localStorage.removeItem('token');
-        }
-      }
-      setLoading(false);
-    };
-    initAuth();
+    // Auth initialization skipped for demo
   }, []);
 
   const login = async (email, password) => {
