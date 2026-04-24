@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Plus, Upload, Filter, Search } from 'lucide-react';
+import { Plus, Upload, Filter, Search, Download } from 'lucide-react';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 import TransactionForm from '../components/TransactionForm';
@@ -63,6 +63,37 @@ const Transactions = () => {
     }
   }
 
+  const exportToCSV = () => {
+    if (transactions.length === 0) return toast.error('No transactions to export');
+    
+    // Create CSV content
+    const headers = ['Date', 'Description', 'Category', 'Type', 'Amount (INR)'];
+    const csvRows = [];
+    csvRows.push(headers.join(','));
+    
+    transactions.forEach(tx => {
+      const row = [
+        new Date(tx.date).toLocaleDateString(),
+        `"${tx.description.replace(/"/g, '""')}"`, // escape quotes
+        tx.category,
+        tx.type,
+        (tx.amount / 100).toFixed(2)
+      ];
+      csvRows.push(row.join(','));
+    });
+    
+    const csvString = csvRows.join('\n');
+    const blob = new Blob([csvString], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('hidden', '');
+    a.setAttribute('href', url);
+    a.setAttribute('download', `transactions_export_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/60 p-6 rounded-2xl border border-white/40 shadow-sm backdrop-blur-md">
@@ -71,13 +102,20 @@ const Transactions = () => {
           <p className="text-sm text-gray-500 mt-1">Manage your income and expenses.</p>
         </div>
         <div className="flex gap-3">
-          <div {...getRootProps()} className="cursor-pointer">
+          <div {...getRootProps()} className="cursor-pointer hidden sm:block">
             <input {...getInputProps()} />
             <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
               <Upload size={16} />
               {isDragActive ? 'Drop here' : 'Import CSV'}
             </button>
           </div>
+          <button 
+            onClick={exportToCSV}
+            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium hidden sm:flex"
+          >
+            <Download size={16} />
+            Export
+          </button>
           <button 
             onClick={() => setShowAddModal(true)}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium shadow-sm"
