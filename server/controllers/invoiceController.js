@@ -14,15 +14,12 @@ const invoiceController = {
       // 2. Insert into invoices table
       const invoiceObj = {
         user_id: req.user.userId,
-        file_path: imagePath,
+        file_url: imagePath,
         vendor: parsedData?.vendor || null,
         invoice_date: parsedData?.invoice_date || null,
         invoice_number: parsedData?.invoice_number || null,
         total: parsedData?.total ? parseFloat(parsedData.total) * 100 : null, // Store in paise
-        tax: parsedData?.tax ? parseFloat(parsedData.tax) * 100 : null,
-        gstin: parsedData?.gstin || null,
-        line_items: parsedData?.line_items || [],
-        raw_text: rawText
+        gstin: parsedData?.gstin || null
       };
 
       const { data: insertedInvoice, error } = await supabase
