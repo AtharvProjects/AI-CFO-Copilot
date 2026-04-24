@@ -38,7 +38,7 @@ const groqService = {
   /**
    * Streams responses for the AI CFO Chat
    */
-  async streamCfoChat(messages, res) {
+  async streamCfoChat(messages, res, onComplete) {
     try {
       const stream = await groq.chat.completions.create({
         messages,
@@ -47,11 +47,16 @@ const groqService = {
         stream: true,
       });
 
+      let fullResponse = '';
       for await (const chunk of stream) {
         const content = chunk.choices[0]?.delta?.content || '';
+        fullResponse += content;
         res.write(content);
       }
       res.end();
+      if (onComplete) {
+        onComplete(fullResponse);
+      }
     } catch (error) {
       console.error('Groq Stream Error:', error);
       res.status(500).send('Error communicating with AI CFO');
