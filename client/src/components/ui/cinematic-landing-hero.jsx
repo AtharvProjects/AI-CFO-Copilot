@@ -336,29 +336,29 @@ export function CinematicHero({
           <div className="card-sheen" aria-hidden="true" />
 
           {/* BACKGROUND TEXTS & LAPTOP MOCKUP */}
-          <div className="relative w-full h-full max-w-[1400px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 items-center z-10 py-12 lg:py-0 relative">
+          <div className="relative w-full h-full max-w-[1400px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center z-10 py-12 lg:py-0 relative">
             
             {/* BRAND NAME (Ambient Background) */}
-            <div className="card-right-text gsap-reveal absolute top-10 md:top-20 right-6 md:right-16 z-0 opacity-10 lg:opacity-60 flex justify-end pointer-events-none">
+            <div className="card-right-text gsap-reveal absolute top-10 md:top-24 right-6 md:right-16 z-0 opacity-10 lg:opacity-60 flex justify-end pointer-events-none">
               <h2 className="text-7xl md:text-[9rem] lg:text-[11rem] font-black uppercase tracking-tighter text-card-silver-matte leading-none">
                 {brandName}
               </h2>
             </div>
 
             {/* ACCOUNTABILITY TEXT (Bottom-Left Desktop, Top Mobile) */}
-            <div className="card-left-text gsap-reveal lg:col-span-4 z-30 flex flex-col justify-center lg:justify-end h-full pb-12 lg:pb-32 mt-12 lg:mt-0 order-2 lg:order-1">
-              <h3 className="text-white text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 tracking-tight drop-shadow-xl">
+            <div className="card-left-text gsap-reveal lg:col-span-5 z-30 flex flex-col justify-center lg:justify-center h-full pb-0 mt-12 lg:mt-0 order-2 lg:order-1 lg:pr-4">
+              <h3 className="text-white text-3xl md:text-4xl lg:text-5xl font-extrabold mb-5 tracking-tight drop-shadow-xl leading-tight">
                 {cardHeading}
               </h3>
-              <p className="hidden md:block text-zinc-300 text-base lg:text-xl font-medium leading-relaxed drop-shadow-md">
+              <p className="hidden md:block text-zinc-300 text-base lg:text-lg font-medium leading-relaxed drop-shadow-md">
                 {cardDescription}
               </p>
             </div>
 
             {/* THE LAPTOP MOCKUP (Right side Desktop, Bottom Mobile) */}
-            <div className="mockup-scroll-wrapper relative w-full lg:col-span-8 flex items-center justify-center lg:justify-end z-20 order-1 lg:order-2" style={{ perspective: "1500px" }}>
+            <div className="mockup-scroll-wrapper relative w-full lg:col-span-7 flex items-center justify-center lg:justify-end z-20 order-1 lg:order-2 mt-8 lg:mt-12" style={{ perspective: "1500px" }}>
               
-              <div className="relative w-full h-full flex items-center justify-center transform scale-[0.5] sm:scale-[0.65] md:scale-[0.85] lg:scale-90 xl:scale-100 lg:origin-right">
+              <div className="relative w-full h-full flex items-center justify-center transform scale-[0.5] sm:scale-[0.65] md:scale-[0.85] lg:scale-[0.85] xl:scale-95 lg:origin-right">
                 
                 {/* Laptop Bezel Container */}
                 <div
@@ -441,7 +441,7 @@ export function CinematicHero({
                 </div>
 
                 {/* Floating Glass Badges */}
-                <div className="floating-badge absolute flex top-8 lg:top-16 left-[-10px] lg:left-[-40px] floating-ui-badge rounded-2xl p-4 items-center gap-4 z-30 transform hover:scale-105 transition-transform">
+                <div className="floating-badge absolute flex top-12 lg:top-16 left-[-20px] lg:left-[-80px] floating-ui-badge rounded-2xl p-4 items-center gap-4 z-30 transform hover:scale-105 transition-transform">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-b from-indigo-500/20 to-indigo-900/10 flex items-center justify-center border border-indigo-400/30 shadow-inner">
                     <span className="text-xl drop-shadow-lg" aria-hidden="true">💡</span>
                   </div>
