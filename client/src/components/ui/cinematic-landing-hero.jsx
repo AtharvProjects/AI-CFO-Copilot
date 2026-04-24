@@ -336,7 +336,7 @@ export function CinematicHero({
           <div className="card-sheen" aria-hidden="true" />
 
           {/* BACKGROUND TEXTS & LAPTOP MOCKUP */}
-          <div className="relative w-full h-full max-w-[1400px] mx-auto px-6 lg:px-12 flex items-center justify-center z-10 py-12 lg:py-0">
+          <div className="relative w-full h-full max-w-[1400px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 items-center z-10 py-12 lg:py-0 relative">
             
             {/* BRAND NAME (Ambient Background) */}
             <div className="card-right-text gsap-reveal absolute top-10 md:top-20 right-6 md:right-16 z-0 opacity-10 lg:opacity-60 flex justify-end pointer-events-none">
@@ -345,8 +345,8 @@ export function CinematicHero({
               </h2>
             </div>
 
-            {/* ACCOUNTABILITY TEXT (Foreground Top-Left) */}
-            <div className="card-left-text gsap-reveal absolute top-12 md:top-24 left-6 md:left-16 z-30 max-w-sm lg:max-w-lg">
+            {/* ACCOUNTABILITY TEXT (Bottom-Left Desktop, Top Mobile) */}
+            <div className="card-left-text gsap-reveal lg:col-span-4 z-30 flex flex-col justify-center lg:justify-end h-full pb-12 lg:pb-32 mt-12 lg:mt-0 order-2 lg:order-1">
               <h3 className="text-white text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 tracking-tight drop-shadow-xl">
                 {cardHeading}
               </h3>
@@ -355,10 +355,10 @@ export function CinematicHero({
               </p>
             </div>
 
-            {/* THE LAPTOP MOCKUP */}
-            <div className="mockup-scroll-wrapper relative w-full flex items-center justify-center z-20 mt-24 lg:mt-32" style={{ perspective: "1500px" }}>
+            {/* THE LAPTOP MOCKUP (Right side Desktop, Bottom Mobile) */}
+            <div className="mockup-scroll-wrapper relative w-full lg:col-span-8 flex items-center justify-center lg:justify-end z-20 order-1 lg:order-2" style={{ perspective: "1500px" }}>
               
-              <div className="relative w-full h-full flex items-center justify-center transform scale-[0.5] sm:scale-[0.65] md:scale-[0.85] lg:scale-100">
+              <div className="relative w-full h-full flex items-center justify-center transform scale-[0.5] sm:scale-[0.65] md:scale-[0.85] lg:scale-90 xl:scale-100 lg:origin-right">
                 
                 {/* Laptop Bezel Container */}
                 <div
