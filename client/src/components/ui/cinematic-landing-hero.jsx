@@ -345,8 +345,8 @@ export function CinematicHero({
               </h2>
             </div>
 
-            {/* ACCOUNTABILITY TEXT (Background/Left) */}
-            <div className="card-left-text gsap-reveal absolute bottom-12 md:bottom-24 left-0 md:left-0 lg:-left-4 z-0 max-w-sm lg:max-w-md">
+            {/* ACCOUNTABILITY TEXT (Foreground/Left) */}
+            <div className="card-left-text gsap-reveal absolute bottom-8 md:bottom-16 left-4 md:left-8 lg:left-0 z-40 max-w-sm lg:max-w-md drop-shadow-2xl pointer-events-none">
               <h3 className="text-white text-2xl md:text-3xl lg:text-4xl font-bold mb-3 tracking-tight">
                 {cardHeading}
               </h3>
