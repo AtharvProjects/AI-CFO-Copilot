@@ -1,0 +1,13 @@
+const express = require('express');
+const chatController = require('../controllers/chatController');
+const auth = require('../middleware/auth');
+const { aiLimiter } = require('../middleware/rateLimiter');
+
+const router = express.Router();
+
+router.use(auth);
+
+// Apply strict AI rate limit
+router.post('/', aiLimiter, chatController.handleChat);
+
+module.exports = router;
