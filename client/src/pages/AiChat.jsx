@@ -3,6 +3,7 @@ import { Send, User, Bot, AlertTriangle, TrendingUp, Landmark, LineChart } from 
 import { useAuth } from '../contexts/AuthContext';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { ShiningText } from '../components/ui/shining-text';
 
 const AGENTS = [
   { id: 1, name: 'Cash Flow Expert', icon: LineChart, color: 'text-blue-500', bg: 'bg-blue-50' },
@@ -178,10 +179,8 @@ const AiChat = () => {
               <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-100 to-indigo-100 flex items-center justify-center">
                 <Bot size={18} className="text-blue-600" />
               </div>
-              <div className="bg-gray-100 text-gray-500 rounded-2xl rounded-tl-none px-5 py-3 text-sm flex items-center gap-2">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+              <div className="bg-gray-100 rounded-2xl rounded-tl-none px-5 py-3 flex items-center">
+                <ShiningText text="AI Copilot is thinking..." />
               </div>
             </div>
           )}
