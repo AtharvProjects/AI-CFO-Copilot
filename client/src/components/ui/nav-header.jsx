@@ -16,7 +16,7 @@ function NavHeader() {
       <Tab setPosition={setPosition}>Pricing</Tab>
       <Tab setPosition={setPosition}>CFO Chat</Tab>
       <Tab setPosition={setPosition}>
-        <Link to="/login" className="px-3 py-1.5 md:px-5 md:py-3 block w-full h-full">Login</Link>
+        <Link to="/dashboard" className="px-3 py-1.5 md:px-5 md:py-3 block w-full h-full">Go to Dashboard</Link>
       </Tab>
       <Cursor position={position} />
     </ul>
