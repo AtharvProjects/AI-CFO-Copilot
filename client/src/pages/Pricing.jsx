@@ -10,7 +10,7 @@ const PRICING_PLANS = [
 
 export default function Pricing() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-white font-sans overflow-x-hidden pt-32 pb-12">
+    <div className="min-h-screen bg-[#f0f0f0] text-slate-800 font-sans overflow-x-hidden pt-32 pb-12">
       {/* Sticky Navigation */}
       <div className="fixed top-6 left-0 right-0 z-50 flex justify-center">
         <NavHeader />
@@ -21,7 +21,7 @@ export default function Pricing() {
       </div>
 
       {/* Simple Footer */}
-      <footer className="mt-24 py-12 border-t border-white/10 text-center text-zinc-500 text-sm">
+      <footer className="mt-24 py-12 border-t border-slate-300 text-center text-slate-500 text-sm">
         <p>&copy; 2026 AI CFO Copilot. All rights reserved.</p>
         <p className="mt-2 text-xs">Powered by Groq Llama 3.1 & Supabase</p>
       </footer>
