@@ -1,6 +1,6 @@
 import React from 'react';
 import NavHeader from '../components/ui/nav-header';
-import HeroSection from '../components/ui/glassmorphism-trust-hero';
+import { CinematicHero } from '../components/ui/cinematic-landing-hero';
 import { ShiningText } from '../components/ui/shining-text';
 
 export default function Landing() {
@@ -12,7 +12,7 @@ export default function Landing() {
       </div>
 
       {/* Hero Section */}
-      <HeroSection />
+      <CinematicHero />
 
 
 
