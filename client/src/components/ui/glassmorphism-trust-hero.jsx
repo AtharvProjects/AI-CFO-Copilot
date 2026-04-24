@@ -59,9 +59,7 @@ export default function HeroSection() {
               <Link to="/dashboard" className="group inline-flex items-center justify-center gap-2 rounded-full bg-indigo-600 px-8 py-4 text-sm font-semibold text-white transition-all hover:scale-[1.02] hover:bg-indigo-700">
                 Open Dashboard <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
-              <button className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-8 py-4 text-sm font-semibold text-white backdrop-blur-sm hover:bg-white/10">
-                <Play className="w-4 h-4 fill-current" /> Watch Demo
-              </button>
+
             </div>
           </div>
           <div className="lg:col-span-5 space-y-6 lg:mt-12">
@@ -105,19 +103,7 @@ export default function HeroSection() {
                 </div>
               </div>
             </div>
-            <div className="animate-fade-in delay-500 relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 py-8 backdrop-blur-xl">
-              <h3 className="mb-6 px-8 text-sm font-medium text-zinc-400">Trusted by Indian MSMEs</h3>
-              <div className="relative flex overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 20%, black 80%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 20%, black 80%, transparent)" }}>
-                <div className="animate-marquee flex gap-12 whitespace-nowrap px-4">
-                  {[...CLIENTS, ...CLIENTS, ...CLIENTS].map((client, i) => (
-                    <div key={i} className="flex items-center gap-2 opacity-50 hover:opacity-100 hover:scale-105 cursor-default grayscale hover:grayscale-0">
-                      <client.icon className="h-6 w-6 text-white fill-current" />
-                      <span className="text-lg font-bold text-white tracking-tight">{client.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
