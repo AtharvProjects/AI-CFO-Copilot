@@ -52,6 +52,43 @@ const transactionController = {
       const { data: insertedTx, error } = await supabase.from('transactions').insert([txObj]).select().single();
       if (error) throw error;
 
+      // --- PHASE 1: Shadow write to double-entry ledger ---
+      try {
+        const { data: accounts } = await supabase.from('accounts').select('*').eq('user_id', req.user.userId);
+        if (accounts && accounts.length > 0) {
+          const cashAccount = accounts.find(a => a.name === 'Cash/Bank');
+          const revAccount = accounts.find(a => a.name === 'Sales Revenue');
+          const expAccount = accounts.find(a => a.name === 'General Expense');
+          
+          if (cashAccount && revAccount && expAccount) {
+            // Create Journal Entry header
+            const { data: je } = await supabase.from('journal_entries').insert([{
+              user_id: req.user.userId,
+              date: date,
+              description: description || 'Transaction',
+              reference: `TXN-${insertedTx.id}`
+            }]).select().single();
+            
+            if (je) {
+              const lines = [];
+              if (type === 'income') {
+                // Debit Asset (Cash), Credit Revenue
+                lines.push({ journal_entry_id: je.id, account_id: cashAccount.id, debit: amount, credit: 0 });
+                lines.push({ journal_entry_id: je.id, account_id: revAccount.id, debit: 0, credit: amount });
+              } else {
+                // Debit Expense, Credit Asset (Cash)
+                lines.push({ journal_entry_id: je.id, account_id: expAccount.id, debit: amount, credit: 0 });
+                lines.push({ journal_entry_id: je.id, account_id: cashAccount.id, debit: 0, credit: amount });
+              }
+              await supabase.from('journal_lines').insert(lines);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Failed to shadow-write to journal:", err);
+      }
+      // ----------------------------------------------------
+
       await alertService.runChecks(insertedTx);
 
       res.status(201).json({ data: insertedTx });

@@ -17,16 +17,27 @@ const authController = {
       // Insert user
       const { data: user, error } = await supabase
         .from('users')
-        .insert([{ email, password: hashedPassword, business_name, gstin, pan, state, business_type, monthly_budget }])
+        .insert([{ email, password: hashedPassword, business_name, gstin, pan, state, business_type, monthly_budget, role: 'admin' }])
         .select()
         .single();
 
       if (error) throw error;
 
-      // Generate JWT
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+      // Create default accounts for double-entry (Phase 1)
+      const defaultAccounts = [
+        { user_id: user.id, name: 'Cash/Bank', type: 'asset' },
+        { user_id: user.id, name: 'Accounts Receivable', type: 'asset' },
+        { user_id: user.id, name: 'Accounts Payable', type: 'liability' },
+        { user_id: user.id, name: 'Sales Revenue', type: 'revenue' },
+        { user_id: user.id, name: 'General Expense', type: 'expense' },
+        { user_id: user.id, name: 'Owner Equity', type: 'equity' }
+      ];
+      await supabase.from('accounts').insert(defaultAccounts);
 
-      res.status(201).json({ token, user: { id: user.id, email: user.email, business_name: user.business_name } });
+      // Generate JWT
+      const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+      res.status(201).json({ token, user: { id: user.id, email: user.email, business_name: user.business_name, role: user.role } });
     } catch (error) {
       next(error);
     }
@@ -42,9 +53,9 @@ const authController = {
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) return res.status(401).json({ error: 'Invalid credentials' });
 
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+      const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-      res.json({ token, user: { id: user.id, email: user.email, business_name: user.business_name } });
+      res.json({ token, user: { id: user.id, email: user.email, business_name: user.business_name, role: user.role } });
     } catch (error) {
       next(error);
     }

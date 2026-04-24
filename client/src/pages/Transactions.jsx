@@ -188,7 +188,27 @@ const Transactions = () => {
           </table>
         </div>
         
-        {/* Simple Pagination controls could go here */}
+        <div className="p-4 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
+          <div className="text-sm text-gray-500">
+            Showing <span className="font-medium">{(filters.page - 1) * filters.limit + 1}</span> to <span className="font-medium">{Math.min(filters.page * filters.limit, total)}</span> of <span className="font-medium">{total}</span> results
+          </div>
+          <div className="flex gap-2">
+            <button 
+              onClick={() => setFilters(prev => ({...prev, page: Math.max(1, prev.page - 1)}))}
+              disabled={filters.page === 1}
+              className="px-3 py-1 text-sm border border-gray-200 rounded-md hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Previous
+            </button>
+            <button 
+              onClick={() => setFilters(prev => ({...prev, page: prev.page + 1}))}
+              disabled={filters.page * filters.limit >= total}
+              className="px-3 py-1 text-sm border border-gray-200 rounded-md hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </div>
 
       {showAddModal && (
