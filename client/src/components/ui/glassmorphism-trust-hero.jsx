@@ -2,6 +2,7 @@ import React from "react";
 import { ArrowRight, Play, Target, Crown, Star, Hexagon, Triangle, Command, Ghost, Gem, Cpu } from "lucide-react";
 
 import { Link } from 'react-router-dom';
+import { GradientDots } from './gradient-dots';
 
 const CLIENTS = [
   { name: "Acme Corp", icon: Hexagon },
@@ -31,13 +32,9 @@ export default function HeroSection() {
         .delay-300 { animation-delay: 0.3s; } .delay-400 { animation-delay: 0.4s; }
         .delay-500 { animation-delay: 0.5s; }
       `}</style>
-      <div
-        className="absolute inset-0 z-0 bg-[url(https://images.unsplash.com/photo-1614064641913-6b71f3016428?auto=format&fit=crop&w=2000&q=80)] bg-cover bg-center opacity-30"
-        style={{
-          maskImage: "linear-gradient(180deg, transparent, black 0%, black 70%, transparent)",
-          WebkitMaskImage: "linear-gradient(180deg, transparent, black 0%, black 70%, transparent)",
-        }}
-      />
+      <div className="absolute inset-0 z-0 opacity-50" style={{ maskImage: "linear-gradient(180deg, transparent, black 10%, black 70%, transparent)", WebkitMaskImage: "linear-gradient(180deg, transparent, black 10%, black 70%, transparent)" }}>
+        <GradientDots duration={20} backgroundColor="#09090b" dotSize={6} spacing={12} />
+      </div>
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-6 md:pt-32 md:pb-20 lg:px-8">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8 items-center">
           <div className="lg:col-span-7 flex flex-col justify-center space-y-8 pt-8">
