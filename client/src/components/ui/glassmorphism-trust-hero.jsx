@@ -32,14 +32,14 @@ export default function HeroSection() {
         .delay-500 { animation-delay: 0.5s; }
       `}</style>
       <div
-        className="absolute inset-0 z-0 bg-[url(https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&q=80)] bg-cover bg-center opacity-30"
+        className="absolute inset-0 z-0 bg-[url(https://images.unsplash.com/photo-1614064641913-6b71f3016428?auto=format&fit=crop&w=2000&q=80)] bg-cover bg-center opacity-30"
         style={{
           maskImage: "linear-gradient(180deg, transparent, black 0%, black 70%, transparent)",
           WebkitMaskImage: "linear-gradient(180deg, transparent, black 0%, black 70%, transparent)",
         }}
       />
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-6 md:pt-32 md:pb-20 lg:px-8">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8 items-start">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8 items-center">
           <div className="lg:col-span-7 flex flex-col justify-center space-y-8 pt-8">
             <div className="animate-fade-in delay-100">
               <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 backdrop-blur-md">
@@ -60,12 +60,9 @@ export default function HeroSection() {
               <Link to="/dashboard" className="group inline-flex items-center justify-center gap-2 rounded-full bg-indigo-600 px-8 py-4 text-sm font-semibold text-white transition-all hover:scale-[1.02] hover:bg-indigo-700">
                 Open Dashboard <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
-              <button className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-8 py-4 text-sm font-semibold text-white backdrop-blur-sm hover:bg-white/10">
-                <Play className="w-4 h-4 fill-current" /> Watch Demo
-              </button>
             </div>
           </div>
-          <div className="lg:col-span-5 space-y-6 lg:mt-12">
+          <div className="lg:col-span-5 space-y-6">
             <div className="animate-fade-in delay-500 relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl shadow-2xl">
               <div className="absolute top-0 right-0 -mr-16 -mt-16 h-64 w-64 rounded-full bg-indigo-500/20 blur-3xl pointer-events-none" />
               <div className="relative z-10">
@@ -103,19 +100,6 @@ export default function HeroSection() {
                   <div className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-medium text-zinc-300">
                     <Crown className="w-3 h-3 text-yellow-500" /> PRO FEATURES
                   </div>
-                </div>
-              </div>
-            </div>
-            <div className="animate-fade-in delay-500 relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 py-8 backdrop-blur-xl">
-              <h3 className="mb-6 px-8 text-sm font-medium text-zinc-400">Trusted by Indian MSMEs</h3>
-              <div className="relative flex overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 20%, black 80%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 20%, black 80%, transparent)" }}>
-                <div className="animate-marquee flex gap-12 whitespace-nowrap px-4">
-                  {[...CLIENTS, ...CLIENTS, ...CLIENTS].map((client, i) => (
-                    <div key={i} className="flex items-center gap-2 opacity-50 hover:opacity-100 hover:scale-105 cursor-default grayscale hover:grayscale-0">
-                      <client.icon className="h-6 w-6 text-white fill-current" />
-                      <span className="text-lg font-bold text-white tracking-tight">{client.name}</span>
-                    </div>
-                  ))}
                 </div>
               </div>
             </div>
