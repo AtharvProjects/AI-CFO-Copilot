@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, User, Bot, AlertTriangle, TrendingUp, Landmark, LineChart } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import ReactMarkdown from 'react-markdown';
 
 const AGENTS = [
   { id: 1, name: 'Cash Flow Expert', icon: LineChart, color: 'text-blue-500', bg: 'bg-blue-50' },
@@ -36,7 +37,7 @@ const AiChat = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5100/api'}/chat`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5105/api'}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -136,9 +137,23 @@ const AiChat = () => {
                   ? 'bg-blue-600 text-white shadow-sm rounded-tr-none' 
                   : msg.isError 
                     ? 'bg-red-50 text-red-600 border border-red-100'
-                    : 'bg-gray-100 text-gray-800 rounded-tl-none'
+                    : 'bg-gray-100 text-gray-800 rounded-tl-none prose prose-sm max-w-none'
               }`}>
-                {msg.content}
+                {msg.role === 'assistant' ? (
+                  <ReactMarkdown 
+                    components={{
+                      p: ({node, ...props}) => <p className="mb-2 last:mb-0" {...props} />,
+                      ul: ({node, ...props}) => <ul className="list-disc ml-4 mb-2" {...props} />,
+                      ol: ({node, ...props}) => <ol className="list-decimal ml-4 mb-2" {...props} />,
+                      li: ({node, ...props}) => <li className="mb-1" {...props} />,
+                      h3: ({node, ...props}) => <h3 className="font-bold mb-1" {...props} />,
+                    }}
+                  >
+                    {msg.content}
+                  </ReactMarkdown>
+                ) : (
+                  msg.content
+                )}
               </div>
 
               {msg.role === 'user' && (
