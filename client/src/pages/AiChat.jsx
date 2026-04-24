@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send, User, Bot, AlertTriangle, TrendingUp, Landmark, LineChart } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const AGENTS = [
   { id: 1, name: 'Cash Flow Expert', icon: LineChart, color: 'text-blue-500', bg: 'bg-blue-50' },
@@ -37,7 +38,7 @@ const AiChat = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5105/api'}/chat`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5110/api'}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -141,12 +142,21 @@ const AiChat = () => {
               }`}>
                 {msg.role === 'assistant' ? (
                   <ReactMarkdown 
+                    remarkPlugins={[remarkGfm]}
                     components={{
                       p: ({node, ...props}) => <p className="mb-2 last:mb-0" {...props} />,
                       ul: ({node, ...props}) => <ul className="list-disc ml-4 mb-2" {...props} />,
                       ol: ({node, ...props}) => <ol className="list-decimal ml-4 mb-2" {...props} />,
                       li: ({node, ...props}) => <li className="mb-1" {...props} />,
                       h3: ({node, ...props}) => <h3 className="font-bold mb-1" {...props} />,
+                      table: ({node, ...props}) => (
+                        <div className="overflow-x-auto my-4">
+                          <table className="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg overflow-hidden" {...props} />
+                        </div>
+                      ),
+                      thead: ({node, ...props}) => <thead className="bg-gray-50" {...props} />,
+                      th: ({node, ...props}) => <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b" {...props} />,
+                      td: ({node, ...props}) => <td className="px-4 py-2 text-sm text-gray-700 border-b" {...props} />,
                     }}
                   >
                     {msg.content}

@@ -14,7 +14,7 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     let newSocket;
     if (user) {
-      const socketUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5105';
+      const socketUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5110';
       newSocket = io(socketUrl);
 
       newSocket.on('connect', () => {
