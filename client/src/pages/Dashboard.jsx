@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, Legend } from 'recharts';
-import { ArrowUpRight, ArrowDownRight, IndianRupee, Wallet, LineChart as ChartIcon, CreditCard, HandCoins } from 'lucide-react';
+import { generateCFOReport } from '../utils/generatePDF';
+import { FileText, ArrowUpRight, ArrowDownRight, IndianRupee, Wallet, LineChart as ChartIcon, CreditCard, HandCoins } from 'lucide-react';
 import api from '../services/api';
 import { useSocket } from '../contexts/SocketContext';
 import toast from 'react-hot-toast';
@@ -10,8 +11,27 @@ const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 const Dashboard = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [reportLoading, setReportLoading] = useState(false);
   const [scenarioAdj, setScenarioAdj] = useState(0);
   const socket = useSocket();
+
+  const handleDownloadReport = async () => {
+    setReportLoading(true);
+    try {
+      const now = new Date();
+      const month = now.getMonth() + 1;
+      const year = now.getFullYear();
+      
+      const res = await api.get(`/reports/monthly?month=${month}&year=${year}`);
+      generateCFOReport(res.data);
+      toast.success('CFO Report generated successfully!');
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to generate report');
+    } finally {
+      setReportLoading(false);
+    }
+  };
 
   const fetchDashboardData = async () => {
     try {
@@ -74,6 +94,23 @@ const Dashboard = () => {
           <h1 className="text-2xl font-bold text-gray-800">Overview</h1>
           <p className="text-sm text-gray-500 mt-1">Real-time financial pulse of your business.</p>
         </div>
+        <button
+          onClick={handleDownloadReport}
+          disabled={reportLoading}
+          className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all shadow-sm shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {reportLoading ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              <span>Generating AI Summary...</span>
+            </>
+          ) : (
+            <>
+              <FileText size={18} />
+              <span>Download CFO Report</span>
+            </>
+          )}
+        </button>
       </div>
 
       {kpis?.totalIncome === 0 && kpis?.totalExpense === 0 && (

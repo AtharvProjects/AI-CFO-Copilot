@@ -63,6 +63,7 @@ const plaidRoutes = require('./routes/plaidRoutes');
 const gstRoutes = require('./routes/gstRoutes');
 const auditRoutes = require('./routes/auditRoutes');
 const userRoutes = require('./routes/userRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
@@ -73,6 +74,7 @@ app.use('/api/plaid', plaidRoutes);
 app.use('/api/gst', gstRoutes);
 app.use('/api/audit', auditRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/reports', reportRoutes);
 
 // Base route for health check
 app.get('/', (req, res) => {
