@@ -150,6 +150,37 @@ const chatController = {
         res.end();
       }
     }
+  },
+
+  async askQuick(req, res, next) {
+    try {
+      const { message } = req.body;
+      const userId = req.user.userId;
+
+      const { data: userData } = await supabase.from('users').select('*').eq('id', userId).single();
+      
+      const { data: recentTxs } = await supabase
+        .from('transactions')
+        .select('date, description, amount, category, type')
+        .eq('user_id', userId)
+        .order('date', { ascending: false })
+        .limit(20);
+
+      const systemPrompt = `You are an AI CFO Copilot for ${userData.business_name || 'an MSME'}. 
+      Context: ${JSON.stringify(recentTxs || [])}. 
+      Task: Provide a 2-sentence actionable financial advice for the query. 
+      Format: Text only.`;
+
+      const response = await groqService.getChatCompletion([
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: message }
+      ]);
+
+      res.json({ response });
+    } catch (error) {
+      console.error('Quick Ask Error:', error);
+      res.status(500).json({ error: 'Failed to process quick query' });
+    }
   }
 };
 

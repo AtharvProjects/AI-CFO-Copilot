@@ -56,13 +56,12 @@ export default function HeroSection() {
               Automate accounting, predict cash flow, detect fraud, and get real-time strategic advice from 4 specialized AI agents.
             </p>
             <div className="animate-fade-in delay-400 flex flex-col sm:flex-row gap-4">
-              <Link to="/dashboard" className="group inline-flex items-center justify-center gap-2 rounded-full bg-indigo-600 px-8 py-4 text-sm font-semibold text-white transition-all hover:scale-[1.02] hover:bg-indigo-700 shadow-lg shadow-indigo-500/25">
-                Open Dashboard <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              <Link to="/register" className="group inline-flex items-center justify-center gap-2 rounded-full bg-indigo-600 px-8 py-4 text-sm font-semibold text-white transition-all hover:scale-[1.02] hover:bg-indigo-700 shadow-lg shadow-indigo-500/25">
+                Get Started Now <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
               <Link to="/login" className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-8 py-4 text-sm font-semibold text-white backdrop-blur-md transition-all hover:bg-white/10">
                 Sign In
               </Link>
-
             </div>
           </div>
           <div className="lg:col-span-5 space-y-6 lg:mt-12">

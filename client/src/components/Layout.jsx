@@ -3,6 +3,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, ReceiptText, Calculator, FileText, MessageSquare, LogOut, Building2, ShieldCheck, Settings, Zap } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import AlertBell from './AlertBell';
+import MorphPanel from './ui/ai-input';
 import { motion } from 'framer-motion';
 
 const SidebarLink = ({ to, icon: Icon, label }) => {
@@ -126,6 +127,7 @@ const Layout = () => {
           </motion.div>
         </div>
       </main>
+      <MorphPanel />
     </div>
   );
 };

@@ -9,6 +9,7 @@ router.use(auth);
 
 // Apply strict AI rate limit
 router.post('/', aiLimiter, chatController.handleChat);
+router.post('/ask', aiLimiter, chatController.askQuick);
 
 // History routes
 router.get('/history/:agentId', chatController.getHistory);

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import api from '../services/api';
 import toast from 'react-hot-toast';
+import { IndianRupee, Tag, FileText, Calendar, Wallet, Check, AlertCircle, Percent, Globe, Navigation } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const txSchema = z.object({
   type: z.enum(['income', 'expense']),
@@ -16,115 +18,204 @@ const txSchema = z.object({
   is_inter_state: z.boolean().optional(),
 });
 
-const TransactionForm = ({ onSuccess, onCancel }) => {
-  const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm({
+const TransactionForm = ({ transaction, onSuccess, onCancel }) => {
+  const isEditing = !!transaction;
+
+  const { register, handleSubmit, watch, setValue, reset, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(txSchema),
     defaultValues: {
       type: 'expense',
       date: new Date().toISOString().split('T')[0],
       gst_rate: 0.18,
       is_inter_state: false,
+      payment_mode: 'UPI'
     }
   });
 
+  useEffect(() => {
+    if (transaction) {
+      reset({
+        ...transaction,
+        amount: transaction.amount / 100, // convert paise to rupees
+        date: new Date(transaction.date).toISOString().split('T')[0],
+        gst_rate: transaction.gst_rate || 0.18,
+        is_inter_state: !!transaction.is_inter_state,
+        payment_mode: transaction.payment_mode || 'UPI'
+      });
+    }
+  }, [transaction, reset]);
+
   const txType = watch('type');
+  const gstRate = watch('gst_rate');
 
   const onSubmit = async (data) => {
     try {
-      // Amount is sent as paise to backend
-      const payload = { ...data, amount: data.amount * 100 };
-      await api.post('/transactions', payload);
-      toast.success('Transaction added successfully');
+      const payload = { ...data, amount: Math.round(data.amount * 100) };
+      if (isEditing) {
+        await api.put(`/transactions/${transaction.id}`, payload);
+        toast.success('Ledger record updated');
+      } else {
+        await api.post('/transactions', payload);
+        toast.success('New entry committed to ledger');
+      }
       onSuccess();
     } catch (error) {
-      toast.error(error.response?.data?.error || 'Failed to add transaction');
+      toast.error(error.response?.data?.error || 'Failed to save transaction');
     }
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md border border-gray-100">
-      <h3 className="text-xl font-bold mb-4 text-gray-800">Add Transaction</h3>
-      
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="flex gap-4 mb-4">
-          <label className="flex-1 cursor-pointer">
-            <input type="radio" value="expense" {...register('type')} className="sr-only" />
-            <div className={`text-center py-2 rounded-lg font-medium transition-colors ${txType === 'expense' ? 'bg-red-100 text-red-700 border-2 border-red-200' : 'bg-gray-100 text-gray-600 border-2 border-transparent'}`}>
-              Expense
-            </div>
-          </label>
-          <label className="flex-1 cursor-pointer">
-            <input type="radio" value="income" {...register('type')} className="sr-only" />
-            <div className={`text-center py-2 rounded-lg font-medium transition-colors ${txType === 'income' ? 'bg-green-100 text-green-700 border-2 border-green-200' : 'bg-gray-100 text-gray-600 border-2 border-transparent'}`}>
-              Income
-            </div>
-          </label>
-        </div>
-
-        <div>
-          <label className="block text-sm text-gray-600 mb-1">Amount (₹)</label>
-          <input type="number" step="0.01" {...register('amount', { valueAsNumber: true })} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500" />
-          {errors.amount && <p className="text-red-500 text-xs mt-1">{errors.amount.message}</p>}
-        </div>
-
-        <div>
-          <label className="block text-sm text-gray-600 mb-1">Description</label>
-          <input type="text" {...register('description')} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500" />
-          {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description.message}</p>}
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm text-gray-600 mb-1">Date</label>
-            <input type="date" {...register('date')} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500" />
-            {errors.date && <p className="text-red-500 text-xs mt-1">{errors.date.message}</p>}
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 font-sans">
+      <div className="grid grid-cols-2 gap-4 bg-slate-50 p-2 rounded-2xl border border-slate-100">
+        <label className="flex-1 cursor-pointer">
+          <input type="radio" value="expense" {...register('type')} className="sr-only" />
+          <div className={cn(
+            "text-center py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all",
+            txType === 'expense' ? 'bg-white text-rose-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+          )}>
+            Outflow
           </div>
-          <div>
-            <label className="block text-sm text-gray-600 mb-1">Payment Mode</label>
-            <select {...register('payment_mode')} className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="UPI">UPI</option>
-              <option value="Bank Transfer">Bank Transfer</option>
-              <option value="Cash">Cash</option>
-              <option value="Card">Card</option>
+        </label>
+        <label className="flex-1 cursor-pointer">
+          <input type="radio" value="income" {...register('type')} className="sr-only" />
+          <div className={cn(
+            "text-center py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all",
+            txType === 'income' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+          )}>
+            Inflow
+          </div>
+        </label>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Amount Field */}
+        <div className="space-y-2 md:col-span-2">
+          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Transaction Value (INR)</label>
+          <div className="relative group">
+            <span className="absolute left-6 top-1/2 -translate-y-1/2 text-2xl font-black text-slate-300">₹</span>
+            <input 
+              type="number" 
+              step="0.01" 
+              {...register('amount', { valueAsNumber: true })} 
+              className="w-full pl-12 pr-6 py-5 bg-slate-50 border-none rounded-[1.5rem] outline-none text-2xl font-black text-slate-900 focus:ring-4 ring-indigo-500/10 transition-all placeholder:text-slate-200"
+              placeholder="0.00"
+            />
+          </div>
+          {errors.amount && <p className="text-rose-500 text-[10px] font-bold mt-1 ml-1 uppercase">{errors.amount.message}</p>}
+        </div>
+
+        {/* Description */}
+        <div className="space-y-2 md:col-span-2">
+          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Description / Counterparty</label>
+          <div className="relative">
+            <FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
+            <input 
+              type="text" 
+              {...register('description')} 
+              className="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl outline-none text-sm font-bold text-slate-800 focus:bg-white focus:ring-4 ring-indigo-500/5 transition-all"
+              placeholder="e.g. AWS Cloud Hosting, Client Retainer..."
+            />
+          </div>
+          {errors.description && <p className="text-rose-500 text-[10px] font-bold mt-1 ml-1 uppercase">{errors.description.message}</p>}
+        </div>
+
+        {/* Category */}
+        <div className="space-y-2">
+          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Category Tag</label>
+          <div className="relative">
+            <Tag className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
+            <input 
+              type="text" 
+              {...register('category')} 
+              className="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl outline-none text-sm font-bold text-slate-800 focus:bg-white focus:ring-4 ring-indigo-500/5 transition-all"
+              placeholder="AI Auto-Detecting..."
+            />
+          </div>
+        </div>
+
+        {/* Payment Mode */}
+        <div className="space-y-2">
+          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Payment Instrument</label>
+          <div className="relative">
+            <Wallet className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
+            <select 
+              {...register('payment_mode')} 
+              className="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl outline-none text-sm font-bold text-slate-800 focus:bg-white focus:ring-4 ring-indigo-500/5 transition-all appearance-none"
+            >
+              <option value="UPI">Unified Payments (UPI)</option>
+              <option value="Bank Transfer">NEFT/IMPS/RTGS</option>
+              <option value="Cash">Physical Cash</option>
+              <option value="Card">Credit/Debit Card</option>
             </select>
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm text-gray-600 mb-1">Category (Optional)</label>
-          <input type="text" {...register('category')} placeholder="Leave blank for AI auto-categorization" className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
+        {/* Date */}
+        <div className="space-y-2">
+          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Record Date</label>
+          <div className="relative">
+            <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
+            <input 
+              type="date" 
+              {...register('date')} 
+              className="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl outline-none text-sm font-bold text-slate-800 focus:bg-white focus:ring-4 ring-indigo-500/5 transition-all"
+            />
+          </div>
         </div>
 
-        <div className="bg-blue-50 p-3 rounded-lg border border-blue-100 space-y-3">
+        {/* GST Settings */}
+        <div className="bg-indigo-600/5 p-6 rounded-[2rem] border border-indigo-100/50 space-y-4">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-blue-800">GST Integration</label>
             <div className="flex items-center gap-2">
-              <input type="checkbox" {...register('is_inter_state')} className="rounded text-blue-600" />
-              <span className="text-xs text-blue-700">Inter-State (IGST)</span>
+               <Percent size={14} className="text-indigo-600" />
+               <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Tax Integration</span>
             </div>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" {...register('is_inter_state')} className="rounded border-slate-300 text-indigo-600 focus:ring-0" />
+              <span className="text-[10px] font-bold text-indigo-900 uppercase tracking-tighter flex items-center gap-1">
+                <Globe size={10} /> IGST
+              </span>
+            </label>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
             {[0, 0.05, 0.12, 0.18, 0.28].map(rate => (
-              <label key={rate} className="flex-1 cursor-pointer">
+              <label key={rate} className="flex-1 min-w-[50px] cursor-pointer">
                 <input type="radio" value={rate} {...register('gst_rate', { valueAsNumber: true })} className="sr-only" />
-                <div className={`text-center py-1.5 rounded-md text-xs font-bold transition-all ${watch('gst_rate') === rate ? 'bg-blue-600 text-white' : 'bg-white text-blue-600 hover:bg-blue-100'}`}>
+                <div className={cn(
+                  "text-center py-2 rounded-xl text-[10px] font-black transition-all",
+                  gstRate === rate ? 'bg-indigo-600 text-white shadow-lg' : 'bg-white text-indigo-400 hover:bg-indigo-50'
+                )}>
                   {rate * 100}%
                 </div>
               </label>
             ))}
           </div>
         </div>
+      </div>
 
-        <div className="flex gap-3 pt-2">
-          <button type="button" onClick={onCancel} className="flex-1 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
-            Cancel
-          </button>
-          <button type="submit" disabled={isSubmitting} className="flex-1 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-70">
-            {isSubmitting ? 'Saving...' : 'Save'}
-          </button>
-        </div>
-      </form>
-    </div>
+      <div className="flex gap-4 pt-4">
+        <button 
+          type="button" 
+          onClick={onCancel} 
+          className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-[0.98]"
+        >
+          Cancel
+        </button>
+        <button 
+          type="submit" 
+          disabled={isSubmitting} 
+          className="flex-[2] py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50"
+        >
+          {isSubmitting ? (
+            <RefreshCw size={18} className="animate-spin" />
+          ) : (
+            <>
+              {isEditing ? 'Commit Update' : 'Initialize Record'} <Check size={18} className="text-emerald-400" />
+            </>
+          )}
+        </button>
+      </div>
+    </form>
   );
 };
 

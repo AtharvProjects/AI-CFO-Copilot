@@ -1,17 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Plus, Upload, Filter, Search, Download, Trash2, CheckCircle2, AlertCircle, ArrowUpRight, ArrowDownRight, MoreHorizontal, FileSpreadsheet, RefreshCw } from 'lucide-react';
+import { Plus, Upload, Filter, Search, Download, Trash2, CheckCircle2, AlertCircle, ArrowUpRight, ArrowDownRight, MoreHorizontal, FileSpreadsheet, RefreshCw, Edit3, History, Eye, ShieldCheck, X } from 'lucide-react';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 import TransactionForm from '../components/TransactionForm';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const Transactions = () => {
+  const navigate = useNavigate();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editingTransaction, setEditingTransaction] = useState(null);
   const [filters, setFilters] = useState({ page: 1, limit: 12, type: '', search: '' });
   const [total, setTotal] = useState(0);
+  const [activeMenuId, setActiveMenuId] = useState(null);
 
   const fetchTransactions = async () => {
     try {
@@ -64,6 +68,12 @@ const Transactions = () => {
     }
   }
 
+  const handleEdit = (tx) => {
+    setEditingTransaction(tx);
+    setShowAddModal(true);
+    setActiveMenuId(null);
+  };
+
   const exportToCSV = () => {
     if (transactions.length === 0) return toast.error('Empty ledger');
     const headers = ['Date', 'Description', 'Category', 'Type', 'Amount (INR)'];
@@ -87,33 +97,33 @@ const Transactions = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 pb-12">
+    <div className="max-w-7xl mx-auto space-y-8 pb-12 font-sans">
       {/* Dynamic Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 px-4 md:px-0">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3 leading-none">
             Financial Ledger <FileSpreadsheet className="text-indigo-600" size={28} />
           </h1>
-          <p className="text-slate-500 mt-1 font-medium italic">Audit-grade transaction management with real-time sync.</p>
+          <p className="text-slate-500 mt-2 font-medium italic text-sm">Audit-grade transaction management with real-time sync.</p>
         </div>
         <div className="flex flex-wrap gap-3">
           <div {...getRootProps()} className="cursor-pointer">
             <input {...getInputProps()} />
-            <button className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-700 rounded-2xl hover:bg-slate-50 transition-all text-xs font-black uppercase tracking-widest shadow-sm">
+            <button className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-700 rounded-2xl hover:bg-slate-50 transition-all text-[10px] font-black uppercase tracking-[0.15em] shadow-sm active:scale-95">
               <Upload size={16} className="text-indigo-600" />
               {isDragActive ? 'Release' : 'Bulk Import'}
             </button>
           </div>
           <button 
             onClick={exportToCSV}
-            className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-700 rounded-2xl hover:bg-slate-50 transition-all text-xs font-black uppercase tracking-widest shadow-sm"
+            className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-700 rounded-2xl hover:bg-slate-50 transition-all text-[10px] font-black uppercase tracking-[0.15em] shadow-sm active:scale-95"
           >
             <Download size={16} className="text-indigo-600" />
             Export
           </button>
           <button 
-            onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 px-8 py-3 bg-slate-900 text-white rounded-2xl hover:bg-slate-800 transition-all text-xs font-black uppercase tracking-widest shadow-xl shadow-slate-200"
+            onClick={() => { setEditingTransaction(null); setShowAddModal(true); }}
+            className="flex items-center gap-2 px-8 py-3 bg-slate-900 text-white rounded-2xl hover:bg-slate-800 transition-all text-[10px] font-black uppercase tracking-[0.15em] shadow-xl shadow-slate-200 active:scale-95"
           >
             <Plus size={18} className="text-amber-400" />
             Add Entry
@@ -121,7 +131,7 @@ const Transactions = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+      <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col mx-4 md:mx-0">
         {/* Table Controls */}
         <div className="p-8 border-b border-slate-50 flex flex-col md:flex-row gap-6 justify-between items-center bg-slate-50/30">
           <div className="relative w-full md:w-96 group">
@@ -152,7 +162,7 @@ const Transactions = () => {
         </div>
 
         {/* Desktop Ledger Table */}
-        <div className="overflow-x-auto custom-scrollbar">
+        <div className="overflow-x-auto custom-scrollbar relative">
           <table className="w-full text-sm text-left">
             <thead className="text-[10px] text-slate-400 font-black uppercase tracking-[0.15em] bg-slate-50/50">
               <tr>
@@ -215,14 +225,44 @@ const Transactions = () => {
                           <CheckCircle2 size={10} /> Verified
                        </div>
                     </td>
-                    <td className="px-8 py-6 text-right">
+                    <td className="px-8 py-6 text-right relative">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => handleDelete(tx.id)} className="p-2 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all">
+                        <button onClick={() => handleDelete(tx.id)} className="p-2 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all shadow-sm active:scale-90">
                           <Trash2 size={16} />
                         </button>
-                        <button className="p-2 text-slate-300 hover:text-slate-600 hover:bg-slate-50 rounded-xl transition-all">
-                          <MoreHorizontal size={16} />
-                        </button>
+                        <div className="relative">
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveMenuId(activeMenuId === tx.id ? null : tx.id);
+                            }}
+                            className={cn(
+                              "p-2 rounded-xl transition-all shadow-sm active:scale-90",
+                              activeMenuId === tx.id ? "bg-slate-900 text-white" : "text-slate-300 hover:text-slate-600 hover:bg-slate-50"
+                            )}
+                          >
+                            <MoreHorizontal size={16} />
+                          </button>
+                          
+                          {/* Actions Dropdown */}
+                          <AnimatePresence>
+                            {activeMenuId === tx.id && (
+                              <motion.div
+                                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                                className="absolute right-0 top-12 w-48 bg-white border border-slate-100 shadow-2xl rounded-2xl z-[100] py-2 overflow-hidden"
+                                onMouseLeave={() => setActiveMenuId(null)}
+                              >
+                                <DropdownItem icon={<Edit3 size={14} />} label="Edit Record" onClick={() => handleEdit(tx)} />
+                                <DropdownItem icon={<History size={14} />} label="View Audit Logs" onClick={() => navigate('/audit-logs')} />
+                                <DropdownItem icon={<ShieldCheck size={14} />} label="Mark Verified" onClick={() => { toast.success('Record re-verified'); setActiveMenuId(null); }} />
+                                <div className="h-[1px] bg-slate-50 my-1" />
+                                <DropdownItem icon={<Trash2 size={14} />} label="Purge Record" variant="danger" onClick={() => handleDelete(tx.id)} />
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
                       </div>
                     </td>
                   </motion.tr>
@@ -262,7 +302,7 @@ const Transactions = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md"
+            className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md"
           >
             <motion.div 
               initial={{ scale: 0.9, y: 20 }}
@@ -272,15 +312,19 @@ const Transactions = () => {
             >
               <div className="p-10">
                  <div className="flex justify-between items-center mb-8">
-                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Manual Ledger Entry</h3>
-                    <button onClick={() => setShowAddModal(false)} className="p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-full transition-all">
-                       <Plus size={24} className="rotate-45" />
+                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">
+                      {editingTransaction ? 'Edit Ledger Entry' : 'Manual Ledger Entry'}
+                    </h3>
+                    <button onClick={() => { setShowAddModal(false); setEditingTransaction(null); }} className="p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-full transition-all">
+                       <X size={24} />
                     </button>
                  </div>
                  <TransactionForm 
-                  onCancel={() => setShowAddModal(false)} 
+                  transaction={editingTransaction}
+                  onCancel={() => { setShowAddModal(false); setEditingTransaction(null); }} 
                   onSuccess={() => {
                     setShowAddModal(false);
+                    setEditingTransaction(null);
                     fetchTransactions();
                   }} 
                 />
@@ -292,5 +336,22 @@ const Transactions = () => {
     </div>
   );
 };
+
+const DropdownItem = ({ icon, label, onClick, variant = 'default' }) => (
+  <button
+    onClick={(e) => { e.stopPropagation(); onClick(); }}
+    className={cn(
+      "w-full px-4 py-2.5 text-left text-[10px] font-black uppercase tracking-widest flex items-center gap-3 transition-colors",
+      variant === 'danger' ? "text-rose-500 hover:bg-rose-50" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+    )}
+  >
+    {icon}
+    {label}
+  </button>
+)
+
+function cn(...inputs) {
+  return inputs.filter(Boolean).join(' ');
+}
 
 export default Transactions;

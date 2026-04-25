@@ -24,14 +24,17 @@ function NavHeader() {
         <Link to="/chat" className="px-3 py-1.5 md:px-5 md:py-3 block w-full h-full">CFO Chat</Link>
       </Tab>
       <Tab setPosition={setPosition}>
-        <Link to="/dashboard" className="px-3 py-1.5 md:px-5 md:py-3 block w-full h-full">Go to Dashboard</Link>
+        <Link to="/login" className="px-3 py-1.5 md:px-5 md:py-3 block w-full h-full">Login</Link>
+      </Tab>
+      <Tab setPosition={setPosition} isCta>
+        <Link to="/register" className="px-3 py-1.5 md:px-5 md:py-3 block w-full h-full text-white">Get Started</Link>
       </Tab>
       <Cursor position={position} />
     </ul>
   );
 }
 
-const Tab = ({ children, setPosition }) => {
+const Tab = ({ children, setPosition, isCta }) => {
   const ref = useRef(null);
   return (
     <li
@@ -41,7 +44,10 @@ const Tab = ({ children, setPosition }) => {
         const { width } = ref.current.getBoundingClientRect();
         setPosition({ width, opacity: 1, left: ref.current.offsetLeft });
       }}
-      className="relative z-10 block cursor-pointer text-xs font-semibold uppercase text-zinc-300 transition-colors hover:text-white md:text-sm flex items-center justify-center"
+      className={cn(
+        "relative z-10 block cursor-pointer text-xs font-semibold uppercase transition-colors md:text-sm flex items-center justify-center rounded-full",
+        isCta ? "text-white" : "text-zinc-300 hover:text-white"
+      )}
     >
       {typeof children === 'string' ? (
          <div className="px-3 py-1.5 md:px-5 md:py-3">{children}</div>
@@ -53,7 +59,11 @@ const Tab = ({ children, setPosition }) => {
 };
 
 const Cursor = ({ position }) => (
-  <motion.li animate={position} className="absolute z-0 h-7 rounded-full bg-indigo-600 md:h-11" />
+  <motion.li animate={position} className="absolute z-0 h-7 rounded-full bg-indigo-600 md:h-11 shadow-lg shadow-indigo-500/20" />
 );
+
+function cn(...inputs) {
+  return inputs.filter(Boolean).join(' ');
+}
 
 export default NavHeader;

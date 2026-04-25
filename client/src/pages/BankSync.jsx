@@ -26,10 +26,11 @@ const BankSync = () => {
       setIsSyncing(true);
       setTimeout(() => {
         setBankTransactions([
-          { id: 'in1', date: new Date().toISOString().split('T')[0], description: 'UPI/Zomato/UPI/123456', amount: -450, status: 'pending', category: 'Food & Dining' },
-          { id: 'in2', date: new Date(Date.now() - 86400000).toISOString().split('T')[0], description: 'NEFT-Client Payment India', amount: 85000, status: 'pending', category: 'Income' },
-          { id: 'in3', date: new Date(Date.now() - 172800000).toISOString().split('T')[0], description: 'ACH-Reliance Jio Bill', amount: -1999, status: 'pending', category: 'Utilities' },
-          { id: 'in4', date: new Date(Date.now() - 259200000).toISOString().split('T')[0], description: 'Amazon Web Services', amount: -12500, status: 'pending', category: 'Software' },
+          { id: 'in1', date: new Date().toISOString().split('T')[0], description: 'UPI/Pantry-Reliance/UPI/123456', amount: 1540, status: 'pending', category: 'Food & Pantry' },
+          { id: 'in2', date: new Date(Date.now() - 86400000).toISOString().split('T')[0], description: 'NEFT-Matrix Corp India Pyt', amount: 150000, status: 'pending', category: 'Income' },
+          { id: 'in3', date: new Date(Date.now() - 172800000).toISOString().split('T')[0], description: 'ACH-Airtel Fiber Bill', amount: 2849, status: 'pending', category: 'Utilities' },
+          { id: 'in4', date: new Date(Date.now() - 259200000).toISOString().split('T')[0], description: 'AWS India - Hosting', amount: 31276, status: 'pending', category: 'Software' },
+          { id: 'in5', date: new Date(Date.now() - 345600000).toISOString().split('T')[0], description: 'Blue Dart Logistics-MAR', amount: 4250, status: 'pending', category: 'Logistics' },
         ]);
         setIsSyncing(false);
         toast.success('Indian bank feeds synced!');
