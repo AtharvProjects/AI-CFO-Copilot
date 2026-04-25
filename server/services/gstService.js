@@ -12,8 +12,8 @@ const gstService = {
   /**
    * Calculate CGST, SGST, IGST
    */
-  calculateGST(amount, category, isSameState) {
-    const rate = this.getRateForCategory(category);
+  calculateGST(amount, category, isSameState, manualRate) {
+    const rate = manualRate !== undefined ? parseFloat(manualRate) : this.getRateForCategory(category);
     const taxAmount = amount * rate;
     
     if (rate === 0) {

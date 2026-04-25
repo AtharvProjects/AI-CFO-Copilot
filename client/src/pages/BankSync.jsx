@@ -46,8 +46,10 @@ const BankSync = () => {
         const res = await api.post('/plaid/create_link_token');
         setLinkToken(res.data.link_token);
       } catch (err) {
-        console.error('Error fetching link token:', err);
-        toast.error('Failed to initialize Plaid connection');
+        if (err.response?.data?.error !== 'PLAID_KEYS_MISSING') {
+          console.error('Error fetching link token:', err);
+          toast.error('Failed to initialize Plaid connection');
+        }
       }
     };
     fetchLinkToken();

@@ -19,13 +19,17 @@ const userAccessTokens = new Map();
 const plaidController = {
   async createLinkToken(req, res, next) {
     try {
+      if (!process.env.PLAID_CLIENT_ID || !process.env.PLAID_SECRET) {
+        return res.status(400).json({ error: 'PLAID_KEYS_MISSING', message: 'Plaid credentials not configured' });
+      }
+
       const { userId } = req.user;
       
       const request = {
         user: { client_user_id: userId },
         client_name: 'AI CFO Copilot',
         products: ['transactions'],
-        country_codes: ['US', 'GB', 'CA'], // Add other supported countries as needed
+        country_codes: ['US', 'GB', 'CA'],
         language: 'en',
       };
       

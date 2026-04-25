@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, ReceiptText, Calculator, FileText, MessageSquare, LogOut, Building2 } from 'lucide-react';
+import { LayoutDashboard, ReceiptText, Calculator, FileText, MessageSquare, LogOut, Building2, ShieldCheck, Settings } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import AlertBell from './AlertBell';
 
@@ -45,7 +45,9 @@ const Layout = () => {
           <SidebarLink to="/bank-sync" icon={Building2} label="Bank Sync" />
           <SidebarLink to="/invoices" icon={FileText} label="Invoicing" />
           <SidebarLink to="/chat" icon={MessageSquare} label="AI Advisor" />
-          <SidebarLink to="/gst-calculator" icon={Calculator} label="GST Calculator" />
+          <SidebarLink to="/gst-ledger" icon={Calculator} label="GST Ledger" />
+          <SidebarLink to="/audit-logs" icon={ShieldCheck} label="Audit Logs" />
+          <SidebarLink to="/profile" icon={Settings} label="Settings" />
         </nav>
 
         <div className="p-4 border-t border-gray-100">

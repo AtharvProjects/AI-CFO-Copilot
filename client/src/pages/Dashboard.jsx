@@ -50,6 +50,21 @@ const Dashboard = () => {
     </div>;
   }
 
+  if (!data) {
+    return (
+      <div className="max-w-7xl mx-auto flex flex-col items-center justify-center h-64 text-center">
+        <h2 className="text-xl font-semibold text-gray-700">Unable to load dashboard</h2>
+        <p className="text-gray-500 mt-2">Please check your connection and try again.</p>
+        <button 
+          onClick={fetchDashboardData}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
   const { kpis, forecast, donutChartData, budget } = data;
 
   return (

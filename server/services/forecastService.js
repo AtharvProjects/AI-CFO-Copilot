@@ -37,7 +37,7 @@ const forecastService = {
     const runway = avgDailyExpense > 0 ? Math.round(currentBalance / avgDailyExpense) : 999;
 
     // Project next 30 days
-    const projection = [];
+    const data = [];
     let projectedBalance = currentBalance;
     const today = new Date();
 
@@ -48,11 +48,11 @@ const forecastService = {
       const pDate = new Date(today);
       pDate.setDate(today.getDate() + i);
 
-      projection.push({
+      data.push({
         date: pDate.toISOString().split('T')[0],
-        projectedIncome: avgDailyIncome,
-        projectedExpense: avgDailyExpense,
-        projectedBalance: projectedBalance
+        income: avgDailyIncome,
+        expense: avgDailyExpense,
+        balance: projectedBalance
       });
     }
 
@@ -69,7 +69,7 @@ const forecastService = {
       avgDailyIncome,
       avgDailyExpense,
       narrative,
-      projection
+      data
     };
   }
 };

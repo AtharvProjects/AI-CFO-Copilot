@@ -1,8 +1,14 @@
+// Server entry point - triggered restart
 require('dotenv').config({ override: true });
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
+
+console.log('--- Server Starting ---');
+console.log('PORT:', process.env.PORT);
+console.log('CLIENT_URL:', process.env.CLIENT_URL);
+console.log('-----------------------');
 
 const app = express();
 const server = http.createServer(app);
@@ -10,13 +16,16 @@ const server = http.createServer(app);
 // Initialize Socket.io
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: [process.env.CLIENT_URL, 'http://localhost:8081', 'http://localhost:5185', 'http://localhost:5173'],
     methods: ['GET', 'POST']
   }
 });
 
 // Middleware
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
+app.use(cors({ 
+  origin: [process.env.CLIENT_URL, 'http://localhost:8081', 'http://localhost:5185', 'http://localhost:5173'],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
@@ -51,6 +60,9 @@ const invoiceRoutes = require('./routes/invoiceRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const plaidRoutes = require('./routes/plaidRoutes');
+const gstRoutes = require('./routes/gstRoutes');
+const auditRoutes = require('./routes/auditRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
@@ -58,6 +70,9 @@ app.use('/api/invoices', invoiceRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/plaid', plaidRoutes);
+app.use('/api/gst', gstRoutes);
+app.use('/api/audit', auditRoutes);
+app.use('/api/user', userRoutes);
 
 // Base route for health check
 app.get('/', (req, res) => {

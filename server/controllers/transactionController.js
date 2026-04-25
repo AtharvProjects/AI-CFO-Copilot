@@ -2,6 +2,7 @@ const supabase = require('../supabaseClient');
 const groqService = require('../services/groqService');
 const importService = require('../services/importService');
 const alertService = require('../services/alertService');
+const gstService = require('../services/gstService');
 
 const transactionController = {
   async getTransactions(req, res, next) {
@@ -30,13 +31,17 @@ const transactionController = {
 
   async createTransaction(req, res, next) {
     try {
-      const { type, amount, description, date, payment_mode, tags } = req.body;
+      const { type, amount, description, date, payment_mode, tags, gst_rate, is_inter_state } = req.body;
       let { category } = req.body;
 
       // Auto-categorize if not provided
       if (!category && description) {
         category = await groqService.categorizeTransaction(description);
       }
+
+      // Calculate GST
+      const isSameState = !is_inter_state;
+      const gstDetails = gstService.calculateGST(amount, category || 'Other', isSameState, gst_rate);
 
       const txObj = {
         user_id: req.user.userId,
@@ -46,7 +51,12 @@ const transactionController = {
         description,
         date,
         payment_mode,
-        tags
+        tags,
+        gst_rate: gstDetails.rate,
+        cgst: Math.round(gstDetails.cgst),
+        sgst: Math.round(gstDetails.sgst),
+        igst: Math.round(gstDetails.igst),
+        is_inter_state: !!is_inter_state
       };
 
       const { data: insertedTx, error } = await supabase.from('transactions').insert([txObj]).select().single();

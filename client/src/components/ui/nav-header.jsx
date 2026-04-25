@@ -14,11 +14,15 @@ function NavHeader() {
       <Tab setPosition={setPosition}>
         <Link to="/" className="px-3 py-1.5 md:px-5 md:py-3 block w-full h-full">Home</Link>
       </Tab>
-      <Tab setPosition={setPosition}>Features</Tab>
+      <Tab setPosition={setPosition}>
+        <a href="#features" className="px-3 py-1.5 md:px-5 md:py-3 block w-full h-full">Features</a>
+      </Tab>
       <Tab setPosition={setPosition}>
         <Link to="/pricing" className="px-3 py-1.5 md:px-5 md:py-3 block w-full h-full">Pricing</Link>
       </Tab>
-      <Tab setPosition={setPosition}>CFO Chat</Tab>
+      <Tab setPosition={setPosition}>
+        <Link to="/chat" className="px-3 py-1.5 md:px-5 md:py-3 block w-full h-full">CFO Chat</Link>
+      </Tab>
       <Tab setPosition={setPosition}>
         <Link to="/dashboard" className="px-3 py-1.5 md:px-5 md:py-3 block w-full h-full">Go to Dashboard</Link>
       </Tab>

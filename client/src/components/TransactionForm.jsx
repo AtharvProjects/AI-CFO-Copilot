@@ -12,6 +12,8 @@ const txSchema = z.object({
   category: z.string().optional(),
   date: z.string().min(1, 'Date is required'),
   payment_mode: z.string().optional(),
+  gst_rate: z.number().min(0).max(1).optional(),
+  is_inter_state: z.boolean().optional(),
 });
 
 const TransactionForm = ({ onSuccess, onCancel }) => {
@@ -20,6 +22,8 @@ const TransactionForm = ({ onSuccess, onCancel }) => {
     defaultValues: {
       type: 'expense',
       date: new Date().toISOString().split('T')[0],
+      gst_rate: 0.18,
+      is_inter_state: false,
     }
   });
 
@@ -89,7 +93,26 @@ const TransactionForm = ({ onSuccess, onCancel }) => {
         <div>
           <label className="block text-sm text-gray-600 mb-1">Category (Optional)</label>
           <input type="text" {...register('category')} placeholder="Leave blank for AI auto-categorization" className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
-          <p className="text-xs text-gray-400 mt-1">If left blank, our AI will automatically assign a category based on the description.</p>
+        </div>
+
+        <div className="bg-blue-50 p-3 rounded-lg border border-blue-100 space-y-3">
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-blue-800">GST Integration</label>
+            <div className="flex items-center gap-2">
+              <input type="checkbox" {...register('is_inter_state')} className="rounded text-blue-600" />
+              <span className="text-xs text-blue-700">Inter-State (IGST)</span>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            {[0, 0.05, 0.12, 0.18, 0.28].map(rate => (
+              <label key={rate} className="flex-1 cursor-pointer">
+                <input type="radio" value={rate} {...register('gst_rate', { valueAsNumber: true })} className="sr-only" />
+                <div className={`text-center py-1.5 rounded-md text-xs font-bold transition-all ${watch('gst_rate') === rate ? 'bg-blue-600 text-white' : 'bg-white text-blue-600 hover:bg-blue-100'}`}>
+                  {rate * 100}%
+                </div>
+              </label>
+            ))}
+          </div>
         </div>
 
         <div className="flex gap-3 pt-2">

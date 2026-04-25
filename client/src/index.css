@@ -52,6 +52,9 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   * {
     border-color: var(--border);
     @apply border-border outline-ring/50;
