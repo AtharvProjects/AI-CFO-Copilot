@@ -236,7 +236,8 @@ const Dashboard = () => {
                 {item.label === 'Cash Runway' ? item.value : `₹${(Math.abs(item.value) / 100).toLocaleString()}`}
               </span>
               {item.suffix && <span className="text-xs text-slate-400 font-bold uppercase">{item.suffix}</span>}
-              {item.label === 'Net Liquidity' && item.value < 0 && <span className="text-rose-500 text-xs font-black">CRITICAL</span>}
+              {item.label === 'Net Liquidity' && item.value < 0 && <span className="text-rose-500 text-[10px] font-black uppercase ml-2 tracking-tighter bg-rose-50 px-2 py-0.5 rounded-md">CRITICAL</span>}
+              {item.label === 'Net Liquidity' && item.value > 0 && <span className="text-emerald-500 text-[10px] font-black uppercase ml-2 tracking-tighter bg-emerald-50 px-2 py-0.5 rounded-md">HEALTHY ++</span>}
             </div>
           </motion.div>
         ))}

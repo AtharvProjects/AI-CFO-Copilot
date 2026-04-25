@@ -4,27 +4,23 @@ require('dotenv').config();
 const TARGET_USER_ID = '1c62c35c-4889-4be5-8167-217fdddb7cad';
 
 const INDIAN_MSME_DATA = [
-  // INCOME
-  { description: 'Monthly Retainer - Apex Solutions', amount: 4500000, category: 'Services', type: 'income', date: '2026-04-01', payment_mode: 'Bank Transfer' },
-  { description: 'Product Sales - Bulk Order (West Zone)', amount: 12500000, category: 'Sales', type: 'income', date: '2026-04-05', payment_mode: 'Bank Transfer' },
-  { description: 'AMC Fees - Global Tech Park', amount: 850000, category: 'Services', type: 'income', date: '2026-04-10', payment_mode: 'UPI' },
-  { description: 'Retail Walk-in Sales (Week 2)', amount: 3200000, category: 'Sales', type: 'income', date: '2026-04-14', payment_mode: 'Cash' },
-  { description: 'Consultation Fee - Matrix Corp', amount: 1500000, category: 'Consulting', type: 'income', date: '2026-04-18', payment_mode: 'Bank Transfer' },
-  { description: 'Product Licensing - Zylker India', amount: 5500000, category: 'Sales', type: 'income', date: '2026-04-22', payment_mode: 'Bank Transfer' },
+  // INCOME (Significant increase for positive approach)
+  { description: 'Enterprise Project - Tata Group', amount: 45000000, category: 'Services', type: 'income', date: '2026-04-01', payment_mode: 'Bank Transfer' },
+  { description: 'Q1 Export Order - Middle East', amount: 82500000, category: 'Sales', type: 'income', date: '2026-04-05', payment_mode: 'Bank Transfer' },
+  { description: 'Govt. Contract - Smart City Phase 1', amount: 65000000, category: 'Contract', type: 'income', date: '2026-04-10', payment_mode: 'Bank Transfer' },
+  { description: 'Product Licensing Revenue', amount: 12000000, category: 'IP', type: 'income', date: '2026-04-14', payment_mode: 'Bank Transfer' },
+  { description: 'Service Retainers - 12 Clients', amount: 25000000, category: 'Services', type: 'income', date: '2026-04-18', payment_mode: 'Bank Transfer' },
+  { description: 'Quarterly Bonus Revenue Share', amount: 18500000, category: 'Sales', type: 'income', date: '2026-04-22', payment_mode: 'Bank Transfer' },
 
-  // EXPENSES
-  { description: 'Commercial Rent - BKC Hub', amount: 12000000, category: 'Rent', type: 'expense', date: '2026-04-01', payment_mode: 'Bank Transfer' },
-  { description: 'AWS India - Cloud Infrastructure', amount: 3127621, category: 'Software', type: 'expense', date: '2026-04-02', payment_mode: 'Card' },
-  { description: 'Staff Salaries - April 2026', amount: 85000000, category: 'Salaries', type: 'expense', date: '2026-04-03', payment_mode: 'Bank Transfer' },
-  { description: 'GST Payment (GSTR-3B) - March', amount: 4250000, category: 'Tax', type: 'expense', date: '2026-04-20', payment_mode: 'Bank Transfer' },
-  { description: 'Airtel Business - Fiber & Leased Line', amount: 1540000, category: 'Utilities', type: 'expense', date: '2026-04-05', payment_mode: 'UPI' },
-  { description: 'Blue Dart - Logistics & Shipping', amount: 2838119, category: 'Logistics', type: 'expense', date: '2026-04-12', payment_mode: 'UPI' },
-  { description: 'Office Supplies - Reliance Retail', amount: 450000, category: 'Maintenance', type: 'expense', date: '2026-04-15', payment_mode: 'Card' },
-  { description: 'Marketing Ads - Google Ads India', amount: 2500000, category: 'Marketing', type: 'expense', date: '2026-04-10', payment_mode: 'Card' },
-  { description: 'Electricity - MSEB Commercial', amount: 840000, category: 'Utilities', type: 'expense', date: '2026-04-08', payment_mode: 'Bank Transfer' },
-  { description: 'Professional Fees - CA Sharma & Co', amount: 1500000, category: 'Consulting', type: 'expense', date: '2026-04-22', payment_mode: 'Bank Transfer' },
-  { description: 'Zomato Daily - Pantry & Team Lunch', amount: 85000, category: 'Food', type: 'expense', date: '2026-04-15', payment_mode: 'UPI' },
-  { description: 'Uber for Business - Travel', amount: 124000, category: 'Travel', type: 'expense', date: '2026-04-18', payment_mode: 'Card' }
+  // EXPENSES (Controlled for profitability)
+  { description: 'Commercial Rent - BKC Hub', amount: 8500000, category: 'Rent', type: 'expense', date: '2026-04-01', payment_mode: 'Bank Transfer' },
+  { description: 'AWS India - Infrastructure', amount: 2450000, category: 'Software', type: 'expense', date: '2026-04-02', payment_mode: 'Card' },
+  { description: 'Staff Salaries & Benefits', amount: 42000000, category: 'Salaries', type: 'expense', date: '2026-04-03', payment_mode: 'Bank Transfer' },
+  { description: 'GST Compliance (GSTR-3B)', amount: 15400000, category: 'Tax', type: 'expense', date: '2026-04-20', payment_mode: 'Bank Transfer' },
+  { description: 'Logistics - Blue Dart Express', amount: 8450000, category: 'Shipping', type: 'expense', date: '2026-04-05', payment_mode: 'UPI' },
+  { description: 'R&D Allocation - New Product', amount: 12000000, category: 'R&D', type: 'expense', date: '2026-04-12', payment_mode: 'Bank Transfer' },
+  { description: 'Marketing - Digital Campaign', amount: 6500000, category: 'Marketing', type: 'expense', date: '2026-04-10', payment_mode: 'Card' },
+  { description: 'Utilities - MSEB & Water', amount: 450000, category: 'Utilities', type: 'expense', date: '2026-04-08', payment_mode: 'Bank Transfer' },
 ];
 
 async function seed() {
