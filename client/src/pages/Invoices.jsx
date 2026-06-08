@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { FileText, UploadCloud, RefreshCw, CheckCircle2, Send, Zap, Search, ShieldCheck, ArrowRightLeft, Plus } from 'lucide-react';
+import { FileText, UploadCloud, RefreshCw, CheckCircle2, Send, Zap, Search, ShieldCheck, ArrowRightLeft, Plus, Trash2 } from 'lucide-react';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 import OutgoingInvoiceGenerator from '../components/OutgoingInvoiceGenerator';
@@ -79,12 +79,27 @@ const Invoices = () => {
       };
       
       await api.post('/transactions', payload);
+      // Mark invoice as synced
+      await api.patch(`/invoices/${invoice.id}`, { synced_to_transaction: true });
+      
       toast.success('Successfully synced to expenses!');
       fetchInvoices();
     } catch (error) {
       toast.error('Failed to sync to expenses');
     } finally {
       setSyncingId(null);
+    }
+  };
+
+  const handleDeleteInvoice = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this invoice?')) return;
+    
+    try {
+      await api.delete(`/invoices/${id}`);
+      toast.success('Invoice deleted');
+      fetchInvoices();
+    } catch (error) {
+      toast.error('Failed to delete invoice');
     }
   };
 
@@ -183,7 +198,7 @@ const Invoices = () => {
                       <th className="px-8 py-5 font-black">Reference #</th>
                       <th className="px-8 py-5 font-black">Compliance (GST)</th>
                       <th className="px-8 py-5 font-black text-right">Total Amount</th>
-                      <th className="px-8 py-5 font-black text-center">Status</th>
+                      <th className="px-8 py-5 font-black text-center">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-50">
@@ -211,22 +226,30 @@ const Invoices = () => {
                           <td className="px-8 py-6 text-right font-black text-base text-slate-900">
                             {inv.total ? `₹${(inv.total / 100).toLocaleString('en-IN', { minimumFractionDigits: 2 })}` : '-'}
                           </td>
-                          <td className="px-8 py-6 text-center">
-                            {inv.synced_to_transaction ? (
-                              <div className="inline-flex items-center gap-1.5 text-emerald-600 text-[10px] font-black uppercase px-3 py-1.5 bg-emerald-50 rounded-full">
-                                <CheckCircle2 size={12} /> Booked
-                              </div>
-                            ) : (
+                           <td className="px-8 py-6 text-center">
+                            <div className="flex items-center justify-center gap-2">
+                              {inv.synced_to_transaction ? (
+                                <div className="inline-flex items-center gap-1.5 text-emerald-600 text-[10px] font-black uppercase px-3 py-1.5 bg-emerald-50 rounded-full">
+                                  <CheckCircle2 size={12} /> Booked
+                                </div>
+                              ) : (
+                                <button 
+                                  onClick={() => handleSyncToExpense(inv)}
+                                  disabled={syncingId === inv.id}
+                                  className="inline-flex items-center gap-2 text-indigo-600 hover:text-white text-xs font-black px-5 py-2.5 bg-indigo-50 hover:bg-indigo-600 rounded-xl transition-all group-hover:shadow-lg group-hover:shadow-indigo-100 disabled:opacity-50"
+                                >
+                                  {syncingId === inv.id ? <RefreshCw size={14} className="animate-spin" /> : <ArrowRightLeft size={14} />}
+                                  Sync Expense
+                                </button>
+                              )}
                               <button 
-                                onClick={() => handleReconcile(tx)}
-                                onClick={() => handleSyncToExpense(inv)}
-                                disabled={syncingId === inv.id}
-                                className="inline-flex items-center gap-2 text-indigo-600 hover:text-white text-xs font-black px-5 py-2.5 bg-indigo-50 hover:bg-indigo-600 rounded-xl transition-all group-hover:shadow-lg group-hover:shadow-indigo-100 disabled:opacity-50"
+                                onClick={() => handleDeleteInvoice(inv.id)}
+                                className="p-2.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
+                                title="Delete Invoice"
                               >
-                                {syncingId === inv.id ? <RefreshCw size={14} className="animate-spin" /> : <ArrowRightLeft size={14} />}
-                                Sync Expense
+                                <Trash2 size={16} />
                               </button>
-                            )}
+                            </div>
                           </td>
                         </tr>
                       ))

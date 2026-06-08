@@ -11,5 +11,7 @@ router.use(auth);
 
 router.post('/upload', aiLimiter, upload.single('invoice'), invoiceController.uploadAndProcess);
 router.get('/', invoiceController.getInvoices);
+router.delete('/:id', invoiceController.deleteInvoice);
+router.patch('/:id', invoiceController.updateInvoice);
 
 module.exports = router;

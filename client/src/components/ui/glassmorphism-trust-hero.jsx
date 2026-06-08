@@ -20,7 +20,7 @@ const StatItem = ({ value, label }) => (
 
 export default function HeroSection() {
   return (
-    <div className="relative w-full bg-zinc-950 text-white overflow-hidden font-sans">
+    <div className="relative w-full bg-zinc-950/0 text-white overflow-hidden font-sans">
       <style>{`
         @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
@@ -30,13 +30,6 @@ export default function HeroSection() {
         .delay-300 { animation-delay: 0.3s; } .delay-400 { animation-delay: 0.4s; }
         .delay-500 { animation-delay: 0.5s; }
       `}</style>
-      <div
-        className="absolute inset-0 z-0 bg-[url(https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&q=80)] bg-cover bg-center opacity-30"
-        style={{
-          maskImage: "linear-gradient(180deg, transparent, black 0%, black 70%, transparent)",
-          WebkitMaskImage: "linear-gradient(180deg, transparent, black 0%, black 70%, transparent)",
-        }}
-      />
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-6 md:pt-32 md:pb-20 lg:px-8">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8 items-start">
           <div className="lg:col-span-7 flex flex-col justify-center space-y-8 pt-8">

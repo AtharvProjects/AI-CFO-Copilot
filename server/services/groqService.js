@@ -68,9 +68,18 @@ const groqService = {
    */
   async parseInvoiceOCR(ocrText) {
     const prompt = `
-    Extract the following from this OCR text of an invoice into JSON format:
-    vendor, invoice_date (YYYY-MM-DD), invoice_number, total (in numeric), tax (in numeric), gstin, and line_items (array of {description, amount}).
-    If a field is missing, return null.
+    Extract the following from this OCR text of an invoice into JSON format. Be extremely precise with the numbers.
+    Do NOT hallucinate or use default values. If a value is not clearly found, return null. Ensure you correctly distinguish between total and tax amounts.
+    
+    Fields:
+    - vendor (Company name of the biller)
+    - invoice_date (YYYY-MM-DD)
+    - invoice_number (Reference number)
+    - total (Numeric total amount including taxes)
+    - tax (Numeric tax amount)
+    - gstin (GST number if present)
+    - line_items (Array of {description, amount})
+    
     OCR Text: ${ocrText}
     `;
 

@@ -49,6 +49,42 @@ const invoiceController = {
     } catch (error) {
       next(error);
     }
+  },
+
+  async deleteInvoice(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { error } = await supabase
+        .from('invoices')
+        .delete()
+        .eq('id', id)
+        .eq('user_id', req.user.userId);
+
+      if (error) throw error;
+      res.json({ message: 'Invoice deleted successfully' });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async updateInvoice(req, res, next) {
+    try {
+      const { id } = req.params;
+      const updates = req.body;
+
+      const { data, error } = await supabase
+        .from('invoices')
+        .update(updates)
+        .eq('id', id)
+        .eq('user_id', req.user.userId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      res.json({ data });
+    } catch (error) {
+      next(error);
+    }
   }
 };
 

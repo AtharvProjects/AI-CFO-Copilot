@@ -1,6 +1,7 @@
 import React from 'react';
 import NavHeader from '../components/ui/nav-header';
 import HeroSection from '../components/ui/glassmorphism-trust-hero';
+import SmokyBackground from '../components/ui/SmokyBackground';
 import { CinematicHero } from '../components/ui/cinematic-landing-hero';
 import { Calculator, ShieldCheck, MessageSquare, FileText, Banknote, LayoutDashboard, Zap, Shield, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -28,6 +29,7 @@ const FeatureCard = ({ icon, title, desc, delay }) => (
 export default function Landing() {
   return (
     <div className="min-h-screen bg-zinc-950 text-white font-sans overflow-x-hidden selection:bg-indigo-500 selection:text-white">
+      <SmokyBackground />
       {/* Sticky Navigation */}
       <div className="fixed top-8 left-0 right-0 z-50 flex justify-center">
         <NavHeader />
@@ -36,16 +38,6 @@ export default function Landing() {
       {/* Hero Section */}
       <div className="relative">
         <HeroSection />
-        {/* Industry Ready Badge */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1 }}
-          className="absolute top-40 left-1/2 -translate-x-1/2 z-30 px-6 py-2 bg-indigo-500/10 border border-indigo-500/30 rounded-full backdrop-blur-xl flex items-center gap-2"
-        >
-          <Zap size={14} className="text-indigo-400 fill-indigo-400" />
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-300">V2.0 Now Industry Ready for MSMEs</span>
-        </motion.div>
       </div>
 
       {/* Trust Bar */}
