@@ -14,8 +14,10 @@ import Dashboard from './pages/Dashboard';
 import Transactions from './pages/Transactions';
 import Invoices from './pages/Invoices';
 import AiChat from './pages/AiChat';
-import GstCalculator from './pages/GstCalculator';
+import GstLedger from './pages/GstLedger';
 import BankSync from './pages/BankSync';
+import AuditLogs from './pages/AuditLogs';
+import Profile from './pages/Profile';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -38,7 +40,9 @@ const AppRoutes = () => {
         <Route path="/invoices" element={<Invoices />} />
         <Route path="/bank-sync" element={<BankSync />} />
         <Route path="/chat" element={<AiChat />} />
-        <Route path="/gst-calculator" element={<GstCalculator />} />
+        <Route path="/gst-ledger" element={<GstLedger />} />
+        <Route path="/audit-logs" element={<AuditLogs />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
     </Routes>
   );

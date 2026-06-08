@@ -253,36 +253,49 @@ export function CinematicHero({
       });
 
       scrollTl
-        .to([".hero-text-wrapper", ".bg-grid-theme"], { scale: 1.15, filter: "blur(20px)", opacity: 0.2, ease: "power2.inOut", duration: 2 }, 0)
-        .to(".main-card", { y: 0, ease: "power3.inOut", duration: 2 }, 0)
-        .to(".main-card", { width: "100%", height: "100%", borderRadius: "0px", ease: "power3.inOut", duration: 1.5 })
+        // 1. Fade out intro text & Move blue card in
+        .to([".hero-text-wrapper", ".bg-grid-theme"], { scale: 1.2, filter: "blur(40px)", opacity: 0, ease: "power2.inOut", duration: 3 }, 0)
+        .to(".main-card", { y: 0, ease: "power2.inOut", duration: 3 }, 0)
+        
+        // 2. Expand card to full screen
+        .to(".main-card", { width: "100%", height: "100%", borderRadius: "0px", ease: "expo.inOut", duration: 2 })
+        
+        // 3. Bring in the Laptop Mockup with a cinematic rotation
         .fromTo(".mockup-scroll-wrapper",
-          { y: 300, z: -500, rotationX: 50, rotationY: -30, autoAlpha: 0, scale: 0.6 },
-          { y: 0, z: 0, rotationX: 0, rotationY: 0, autoAlpha: 1, scale: 1, ease: "expo.out", duration: 2.5 }, "-=0.8"
+          { y: 400, z: -800, rotationX: 45, autoAlpha: 0, scale: 0.5 },
+          { y: 0, z: 0, rotationX: 0, autoAlpha: 1, scale: 1, ease: "power4.out", duration: 3 }, "-=1.0"
         )
-        .fromTo(".phone-widget", { y: 40, autoAlpha: 0, scale: 0.95 }, { y: 0, autoAlpha: 1, scale: 1, stagger: 0.15, ease: "back.out(1.2)", duration: 1.5 }, "-=1.5")
-        .to(".progress-ring", { strokeDashoffset: 60, duration: 2, ease: "power3.inOut" }, "-=1.2")
-        .to(".counter-val", { innerHTML: metricValue, snap: { innerHTML: 1 }, duration: 2, ease: "expo.out" }, "-=2.0")
-        .fromTo(".floating-badge", { y: 100, autoAlpha: 0, scale: 0.7, rotationZ: -10 }, { y: 0, autoAlpha: 1, scale: 1, rotationZ: 0, ease: "back.out(1.5)", duration: 1.5, stagger: 0.2 }, "-=2.0")
-        .fromTo(".card-left-text", { x: -50, autoAlpha: 0 }, { x: 0, autoAlpha: 1, ease: "power4.out", duration: 1.5 }, "-=1.5")
-        .fromTo(".card-right-text", { x: 50, autoAlpha: 0, scale: 0.8 }, { x: 0, autoAlpha: 1, scale: 1, ease: "expo.out", duration: 1.5 }, "<")
-        .to({}, { duration: 2.5 })
+        
+        // 4. Staggered reveal of UI elements
+        .fromTo(".phone-widget", { y: 60, autoAlpha: 0, scale: 0.9 }, { y: 0, autoAlpha: 1, scale: 1, stagger: 0.2, ease: "back.out(1.2)", duration: 2 }, "-=2.0")
+        .to(".progress-ring", { strokeDashoffset: 60, duration: 2.5, ease: "power3.inOut" }, "-=1.5")
+        .to(".counter-val", { innerHTML: metricValue, snap: { innerHTML: 1 }, duration: 2.5, ease: "expo.out" }, "-=2.5")
+        .fromTo(".floating-badge", { y: 120, autoAlpha: 0, scale: 0.6 }, { y: 0, autoAlpha: 1, scale: 1, ease: "back.out(1.5)", duration: 2, stagger: 0.3 }, "-=2.5")
+        .fromTo(".card-left-text", { x: -80, autoAlpha: 0 }, { x: 0, autoAlpha: 1, ease: "power4.out", duration: 2 }, "-=2.0")
+        .fromTo(".card-right-text", { x: 80, autoAlpha: 0 }, { x: 0, autoAlpha: 1, ease: "expo.out", duration: 2 }, "<")
+        
+        // 5. BREATHING SPACE: Let the user see the dashboard
+        .to({}, { duration: 4 })
+        
+        // 6. Transition to CTA: Pull back the card
         .set(".hero-text-wrapper", { autoAlpha: 0 })
-        .set(".cta-wrapper", { autoAlpha: 1, pointerEvents: "auto" }) 
-        .to({}, { duration: 1.5 })
         .to([".mockup-scroll-wrapper", ".floating-badge", ".card-left-text", ".card-right-text"], {
-          scale: 0.9, y: -40, z: -200, autoAlpha: 0, ease: "power3.in", duration: 1.2, stagger: 0.05,
+          scale: 0.8, y: -60, autoAlpha: 0, ease: "power3.in", duration: 1.5, stagger: 0.1
         })
-        // Responsive card pullback sizing
         .to(".main-card", { 
-          width: isMobile ? "92vw" : "85vw", 
-          height: isMobile ? "92vh" : "85vh", 
-          borderRadius: isMobile ? "32px" : "40px", 
+          width: isMobile ? "92vw" : "80vw", 
+          height: isMobile ? "90vh" : "80vh", 
+          borderRadius: isMobile ? "32px" : "48px", 
+          y: 0,
           ease: "expo.inOut", 
-          duration: 1.8 
-        }, "pullback") 
-        .to(".cta-wrapper", { scale: 1, filter: "blur(0px)", ease: "expo.inOut", duration: 1.8 }, "pullback")
-        .to(".main-card", { y: -window.innerHeight - 300, ease: "power3.in", duration: 1.5 });
+          duration: 2 
+        }, "pullback")
+        
+        // 7. Reveal CTA
+        .to(".cta-wrapper", { autoAlpha: 1, scale: 1, filter: "blur(0px)", pointerEvents: "auto", ease: "expo.out", duration: 2 }, "pullback+=0.5")
+        
+        // 8. FINAL EXIT: Glide out for the footer
+        .to(".main-card", { y: -window.innerHeight - 500, ease: "power2.in", duration: 2 }, "+=2");
 
     }, containerRef);
 
@@ -319,9 +332,14 @@ export function CinematicHero({
           {ctaDescription}
         </p>
         <div className="flex flex-col sm:flex-row gap-6">
-          <Link to="/dashboard" className="btn-modern-light flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+          <Link to="/dashboard" className="btn-modern-light flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-xl shadow-blue-500/20">
             <div className="text-left">
               <div className="text-xl font-bold leading-none tracking-tight flex items-center gap-2">Open Dashboard <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" /></div>
+            </div>
+          </Link>
+          <Link to="/chat" className="btn-modern-dark flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 border border-white/10">
+            <div className="text-left">
+              <div className="text-xl font-bold leading-none tracking-tight">AI CFO Chat</div>
             </div>
           </Link>
         </div>

@@ -18,8 +18,9 @@ const auditLogger = async (req, res, next) => {
             {
               user_id: userId,
               action: action,
-              ip: ip,
-              status_code: statusCode
+              table_name: 'api_access',
+              record_id: userId || '00000000-0000-0000-0000-000000000000',
+              new_data: { ip, status_code: statusCode }
             }
           ]);
 

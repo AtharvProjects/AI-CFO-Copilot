@@ -1,5 +1,5 @@
 const { createClient } = require('@supabase/supabase-js');
-require('dotenv').config();
+require('dotenv').config({ path: './.env' });
 
 // We use the service_role key to bypass RLS and perform operations securely on the backend.
 const supabase = createClient(

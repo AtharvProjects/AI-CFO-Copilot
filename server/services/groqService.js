@@ -1,6 +1,6 @@
 const Groq = require('groq-sdk');
 const NodeCache = require('node-cache');
-require('dotenv').config();
+require('dotenv').config({ path: './.env' });
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const cache = new NodeCache({ stdTTL: 3600 }); // 1 hour TTL
